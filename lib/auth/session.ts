@@ -29,7 +29,8 @@ export const getMemberSession = cache(async (): Promise<DecodedIdToken | null> =
   if (!sessionCookie) return null;
 
   try {
-    const session = await getFirebaseAdminAuth().verifySessionCookie(sessionCookie, true);
+    const auth = await getFirebaseAdminAuth();
+    const session = await auth.verifySessionCookie(sessionCookie, true);
     return session.email_verified && isAllowedMember(session.email) ? session : null;
   } catch {
     return null;
