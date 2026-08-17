@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const auth = getFirebaseAdminAuth();
+    const auth = await getFirebaseAdminAuth();
     const decodedToken = await auth.verifyIdToken(idToken);
     const signedInRecently = Date.now() - decodedToken.auth_time * 1000 < 5 * 60 * 1000;
 
