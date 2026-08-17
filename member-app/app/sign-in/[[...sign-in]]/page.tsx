@@ -1,4 +1,4 @@
-import { SignIn } from "@clerk/nextjs";
+import { FirebaseSignIn } from "./firebase-sign-in";
 
 export default function SignInPage() {
   return (
@@ -15,7 +15,7 @@ export default function SignInPage() {
         <h1 id="sign-in-heading">Member sign in</h1>
         <p>Use Google or your registered email address to access the Carer’s Circle Member Area.</p>
         <div className="notice">For your privacy, do not enter health records, case notes or identifying details about the person you care for.</div>
-        <SignIn />
+        <FirebaseSignIn />
       </section>
     </main>
   );
