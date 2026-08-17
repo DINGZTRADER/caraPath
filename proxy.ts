@@ -1,10 +1,15 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 const isMemberRoute = createRouteMatcher(["/members(.*)"]);
 
 export default clerkMiddleware(async (auth, request) => {
   if (isMemberRoute(request)) {
-    await auth.protect();
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.redirect(new URL("/sign-in?redirect_url=/members", request.url));
+    }
   }
 });
 
