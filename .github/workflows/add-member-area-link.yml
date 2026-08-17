@@ -1,0 +1,45 @@
+name: Add Member Area navigation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/add-member-area-link.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-homepage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Add Member Area link
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+          needle = '''          <a href="#sources">Official sources</a>\n'''
+          replacement = '''          <a href="#sources">Official sources</a>\n          <a href="https://members.theclarapath.org" aria-label="Open Member Area" style="display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid #b7c4dc;border-radius:10px;color:#1e3a8a;background:#fff;white-space:nowrap;">\n            <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>\n            <span>Member Area</span>\n          </a>\n'''
+          if 'https://members.theclarapath.org' not in text:
+              if needle not in text:
+                  raise SystemExit("Expected navigation anchor not found; refusing to alter homepage.")
+              text = text.replace(needle, replacement, 1)
+              path.write_text(text, encoding="utf-8")
+
+      - name: Remove one-time workflow
+        run: rm .github/workflows/add-member-area-link.yml
+
+      - name: Commit homepage update
+        run: |
+          git config user.name "caraPath automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html .github/workflows/add-member-area-link.yml
+          git diff --cached --quiet && exit 0
+          git commit -m "Add Member Area link to main navigation"
+          git push origin main
