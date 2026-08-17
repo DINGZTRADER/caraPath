@@ -75,12 +75,20 @@ export default function HomePage() {
                 <a className="button button-secondary" href="#resources">Explore public resources</a>
               </div>
             </div>
-            <aside className="hero-panel" aria-label="The Clara Path approach">
-              <p className="eyebrow">Your next step</p>
-              <h2>From overwhelm to a more organised way forward.</h2>
-              <p>We bring together clear information, careful preparation and the right questions for the right organisation.</p>
-              <div className="route"><div className="route-line" aria-hidden="true" /><div><strong>Support with clear boundaries</strong><span>Navigation that respects the role of qualified health, legal and statutory professionals.</span></div></div>
-            </aside>
+            <figure className="hero-media">
+              <Image
+              src="/images/carer-navigation-hero.webp"
+                alt="A family carer looking towards a clear, illustrated path through a calm home setting."
+                fill
+                priority
+                sizes="(max-width: 850px) calc(100vw - 40px), 46vw"
+              />
+              <figcaption className="hero-caption">
+                <p className="eyebrow">Your next step</p>
+                <h2>From overwhelm to a more organised way forward.</h2>
+                <p>Clear information, careful preparation and the right questions for the right organisation.</p>
+              </figcaption>
+            </figure>
           </div>
         </section>
 
@@ -98,11 +106,71 @@ export default function HomePage() {
           </div>
         </section>
 
+        <section className="journey" aria-labelledby="journey-title">
+          <div className="container">
+            <div className="section-intro">
+              <div><p className="eyebrow">A calmer route through complexity</p><h2 id="journey-title">See the next step without carrying every step at once.</h2></div>
+              <p>The Clara Path helps carers turn a difficult system into a practical sequence: understand where you are, prepare what matters, then approach the right service with more confidence.</p>
+            </div>
+
+            <div className="journey-visual" aria-hidden="true">
+              <svg viewBox="0 0 960 280" role="img" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="route-gradient" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0%" stopColor="#1e3a8a" />
+                    <stop offset="52%" stopColor="#4f83cc" />
+                    <stop offset="100%" stopColor="#65a30d" />
+                  </linearGradient>
+                  <filter id="route-shadow" x="-20%" y="-30%" width="140%" height="170%">
+                    <feDropShadow dx="0" dy="8" stdDeviation="8" floodColor="#1e3a8a" floodOpacity=".12" />
+                  </filter>
+                </defs>
+                <path d="M120 150 C230 32 316 244 431 142 S648 42 825 130" fill="none" stroke="#dbe6f4" strokeLinecap="round" strokeWidth="24" />
+                <path d="M120 150 C230 32 316 244 431 142 S648 42 825 130" fill="none" filter="url(#route-shadow)" stroke="url(#route-gradient)" strokeLinecap="round" strokeWidth="10" />
+                <g fill="#ffffff" stroke="#1e3a8a" strokeWidth="6">
+                  <circle cx="120" cy="150" r="24" />
+                  <circle cx="470" cy="130" r="24" />
+                </g>
+                <circle cx="825" cy="130" r="28" fill="#65a30d" stroke="#ffffff" strokeWidth="8" />
+                <path d="M812 130 l9 9 18 -22" fill="none" stroke="#fff" strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
+                <g fill="#1e3a8a" fontFamily="Inter, Arial, sans-serif" textAnchor="middle">
+                  <text x="120" y="215" fontSize="18" fontWeight="800">Understand</text>
+                  <text x="120" y="239" fontSize="14">your starting point</text>
+                  <text x="470" y="78" fontSize="18" fontWeight="800">Prepare</text>
+                  <text x="470" y="102" fontSize="14">the facts and questions</text>
+                  <text x="825" y="195" fontSize="18" fontWeight="800">Move forward</text>
+                  <text x="825" y="219" fontSize="14">with a clear next action</text>
+                </g>
+              </svg>
+            </div>
+
+            <div className="journey-cards">
+              <article><span>01</span><h3>Understand</h3><p>Identify the decision, assessment or system obstacle that is creating pressure right now.</p></article>
+              <article><span>02</span><h3>Prepare</h3><p>Organise the details, documents and questions that will make your next conversation more useful.</p></article>
+              <article><span>03</span><h3>Move forward</h3><p>Use reliable starting points to take the next appropriate action without unrealistic promises.</p></article>
+            </div>
+          </div>
+        </section>
+
         <section className="resources" id="resources">
           <div className="container">
             <div className="section-intro">
               <div><p className="eyebrow">Carer resource library</p><h2>Prepare thoughtfully. Start with trusted information.</h2></div>
               <p>These are educational starting points, not a substitute for personalised legal, medical or benefits advice. Always confirm local eligibility and next steps with the relevant organisation.</p>
+            </div>
+            <div className="resource-spotlight">
+              <Image
+              src="/images/resource-vault-illustration.webp"
+                width="1254"
+                height="1254"
+                sizes="(max-width: 650px) 220px, 240px"
+                alt="An organised resource folder, checklist and route map."
+              />
+              <div>
+                <p className="eyebrow">Practical preparation</p>
+                <h3>Bring structure to the next conversation.</h3>
+                <p>Use the Resource Library to start with trustworthy sources, make a short list of questions and keep the focus on the step immediately in front of you.</p>
+              </div>
             </div>
             <div className="resource-grid">
               {resources.map((resource) => (
@@ -144,3 +212,4 @@ export default function HomePage() {
     </>
   );
 }
+import Image from "next/image";

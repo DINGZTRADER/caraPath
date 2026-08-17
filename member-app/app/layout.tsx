@@ -17,10 +17,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider>
-      <html lang="en-GB">
-        <body>{children}</body>
-      </html>
-    </ClerkProvider>
+    <html lang="en-GB">
+      <body>
+        <ClerkProvider>{children}</ClerkProvider>
+      </body>
+    </html>
   );
 }
