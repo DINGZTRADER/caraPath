@@ -19,6 +19,7 @@ export default async function MembersLayout({ children }: Readonly<{ children: R
           </a>
           <div className="member-actions">
             <a href="/members/resources">Resources</a>
+            <a href="/members/calendar">Calendar</a>
             <a href="/members/events">Events</a>
             <MemberAccountMenu email={user?.email} name={user?.name} />
           </div>
