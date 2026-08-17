@@ -1,6 +1,10 @@
-import { UserButton } from "@clerk/nextjs";
+import { getMemberSession, requireMember } from "../../lib/auth/session";
+import { MemberAccountMenu } from "./member-account-menu";
 
-export default function MembersLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function MembersLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  await requireMember();
+  const user = await getMemberSession();
+
   return (
     <div className="member-shell">
       <header className="member-header">
@@ -13,7 +17,11 @@ export default function MembersLayout({ children }: Readonly<{ children: React.R
             </svg>
             <span className="brand-copy"><strong>The Clara Path</strong><span>Carer’s Circle member area</span></span>
           </a>
-          <div className="member-actions"><a href="/members/resources">Resources</a><a href="/members/events">Events</a><UserButton /></div>
+          <div className="member-actions">
+            <a href="/members/resources">Resources</a>
+            <a href="/members/events">Events</a>
+            <MemberAccountMenu email={user?.email} name={user?.name} />
+          </div>
         </nav>
       </header>
       {children}
