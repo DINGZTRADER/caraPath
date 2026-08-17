@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1e3a8a" />
+    <meta
+      name="description"
+      content="The Clara Path Carer’s Circle helps family carers navigate UK health and social care with clarity, practical preparation and trusted official sources."
+    />
+    <title>The Clara Path | Your Guide to Health &amp; Social Support</title>
+    <style>
+      :root {
+        --navy: #102b6c;
+        --blue: #1e3a8a;
+        --sky: #e8f0ff;
+        --sage: #4d7c0f;
+        --sage-pale: #f1f8e9;
+        --ink: #172033;
+        --muted: #56627b;
+        --line: #dce3ef;
+        --surface: #f8f9fa;
+        --white: #ffffff;
+        --shadow: 0 18px 45px rgba(16, 43, 108, 0.1);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--surface);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.55;
+      }
+      a { color: inherit; text-decoration: none; }
+      a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+      .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--sage);
+        font-size: 0.77rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      h1, h2, h3, p { margin-top: 0; }
+      h1, h2, h3 { color: var(--navy); line-height: 1.12; }
+      h1 { max-width: 760px; margin-bottom: 22px; font-size: clamp(2.6rem, 6vw, 5.2rem); letter-spacing: -0.055em; }
+      h2 { margin-bottom: 18px; font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -0.045em; }
+      h3 { margin-bottom: 10px; font-size: 1.16rem; }
+      .lede { max-width: 690px; color: var(--muted); font-size: clamp(1.05rem, 2vw, 1.23rem); }
+
+      .site-header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid rgba(220, 227, 239, 0.84); background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(18px); }
+      .nav { display: flex; min-height: 77px; align-items: center; justify-content: space-between; gap: 24px; }
+      .brand { display: inline-flex; align-items: center; gap: 11px; font-weight: 850; letter-spacing: -0.04em; }
+      .brand-mark { width: 35px; height: 35px; flex: 0 0 auto; }
+      .brand-copy { display: grid; gap: 0; }
+      .brand-copy strong { color: var(--navy); font-size: 1.11rem; }
+      .brand-copy span { color: var(--sage); font-size: 0.61rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; }
+      .nav-links { display: flex; align-items: center; gap: 23px; color: #32415d; font-size: 0.92rem; font-weight: 700; }
+      .nav-links a:hover { color: var(--blue); }
+      .menu-button { display: none; border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; color: var(--navy); background: var(--white); font: inherit; font-weight: 800; }
+
+      .hero { overflow: hidden; position: relative; padding: 94px 0 76px; background: linear-gradient(135deg, #ffffff 0%, #ffffff 52%, #eaf1ff 100%); }
+      .hero::before { position: absolute; top: -200px; right: -130px; width: 570px; height: 570px; border: 54px solid rgba(77, 124, 15, 0.11); border-radius: 50%; content: ""; }
+      .hero::after { position: absolute; right: 13%; bottom: -165px; width: 360px; height: 360px; border: 42px solid rgba(30, 58, 138, 0.08); border-radius: 50%; content: ""; }
+      .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.7fr); align-items: end; gap: 64px; }
+      .hero-actions { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 32px; }
+      .button { display: inline-flex; min-height: 47px; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: 10px; padding: 11px 18px; font-size: 0.94rem; font-weight: 800; transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease; }
+      .button:hover { transform: translateY(-2px); }
+      .button-primary { color: var(--white); background: var(--blue); box-shadow: 0 8px 18px rgba(30, 58, 138, 0.21); }
+      .button-primary:hover { background: var(--navy); }
+      .button-secondary { border-color: #b7c4dc; color: var(--blue); background: rgba(255, 255, 255, 0.72); }
+      .hero-panel { position: relative; overflow: hidden; padding: 30px; border: 1px solid rgba(255,255,255,0.76); border-radius: 22px; color: var(--white); background: var(--navy); box-shadow: var(--shadow); }
+      .hero-panel::after { position: absolute; right: -74px; bottom: -75px; width: 220px; height: 220px; border: 27px solid rgba(255,255,255,0.1); border-radius: 50%; content: ""; }
+      .hero-panel .eyebrow { position: relative; z-index: 1; color: #b7d78a; }
+      .hero-panel h2 { position: relative; z-index: 1; margin-bottom: 15px; color: var(--white); font-size: 1.65rem; letter-spacing: -0.035em; }
+      .hero-panel p { position: relative; z-index: 1; margin: 0; color: #dce7ff; }
+      .route { position: relative; z-index: 1; display: grid; grid-template-columns: 8px 1fr; gap: 13px; margin-top: 26px; }
+      .route-line { position: relative; border-radius: 99px; background: linear-gradient(#9cc86c, #ffffff); }
+      .route-line::before, .route-line::after { position: absolute; left: 50%; width: 16px; height: 16px; border: 3px solid var(--navy); border-radius: 50%; background: #9cc86c; content: ""; transform: translateX(-50%); }
+      .route-line::before { top: -1px; }
+      .route-line::after { bottom: -1px; background: var(--white); }
+      .route strong { display: block; margin-bottom: 5px; color: var(--white); }
+      .route span { display: block; color: #dce7ff; font-size: 0.9rem; }
+
+      .trust-band { border-top: 1px solid #e4eaf3; border-bottom: 1px solid #e4eaf3; background: var(--white); }
+      .trust-band .container { display: grid; grid-template-columns: repeat(3, 1fr); }
+      .trust-item { display: flex; min-height: 94px; align-items: center; gap: 14px; padding: 22px 25px; border-right: 1px solid #e4eaf3; color: #3a4d6c; font-size: 0.92rem; font-weight: 750; }
+      .trust-item:first-child { border-left: 1px solid #e4eaf3; }
+      .trust-dot { width: 11px; height: 11px; flex: 0 0 auto; border-radius: 50%; background: var(--sage); box-shadow: 0 0 0 5px var(--sage-pale); }
+
+      section { padding: 96px 0; }
+      .section-intro { display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); gap: 70px; align-items: end; margin-bottom: 45px; }
+      .section-intro p:last-child { max-width: 610px; margin: 0; color: var(--muted); font-size: 1.05rem; }
+      .carers { background: var(--white); }
+      .carer-layout { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.72fr); gap: 45px; align-items: start; }
+      .carer-copy { max-width: 740px; color: #33415a; font-size: 1.05rem; }
+      .carer-copy p { margin-bottom: 18px; }
+      .quote-card { padding: 33px; border-radius: 18px; color: var(--white); background: linear-gradient(145deg, var(--blue), #244896); box-shadow: var(--shadow); }
+      .quote-card svg { width: 31px; height: 31px; margin-bottom: 15px; fill: #b7d78a; }
+      .quote-card p { margin: 0; font-size: 1.25rem; font-weight: 700; line-height: 1.35; }
+      .quote-card span { display: block; margin-top: 21px; color: #cbd8f5; font-size: 0.86rem; }
+
+      .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+      .card { min-height: 225px; padding: 28px; border: 1px solid var(--line); border-radius: 16px; background: var(--white); box-shadow: 0 8px 22px rgba(23, 32, 51, 0.035); }
+      .card-icon { display: grid; width: 40px; height: 40px; place-items: center; margin-bottom: 23px; border-radius: 10px; color: var(--blue); background: var(--sky); font-weight: 900; }
+      .card p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+      .circle { background: #f3f7ff; }
+      .circle-grid { display: grid; grid-template-columns: minmax(240px, 0.72fr) minmax(0, 1.28fr); gap: 42px; }
+      .circle-panel { padding: 30px; border-radius: 18px; color: var(--white); background: var(--navy); box-shadow: var(--shadow); }
+      .circle-panel h3 { margin-bottom: 17px; color: var(--white); font-size: 1.35rem; }
+      .circle-panel p { margin-bottom: 22px; color: #dce7ff; }
+      .circle-panel ul { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+      .circle-panel li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; color: #dce7ff; font-size: 0.93rem; }
+      .circle-panel li::before { color: #b7d78a; content: "✓"; font-weight: 900; }
+      .steps { display: grid; gap: 14px; }
+      .step { display: grid; grid-template-columns: 48px 1fr; gap: 18px; align-items: start; padding: 22px 22px 21px; border: 1px solid #d7e1f1; border-radius: 14px; background: var(--white); }
+      .step-number { display: grid; width: 43px; height: 43px; place-items: center; border-radius: 50%; color: var(--blue); background: var(--sky); font-size: 0.86rem; font-weight: 900; }
+      .step h3 { margin-bottom: 6px; }
+      .step p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+
+      .library { background: var(--white); }
+      .library-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+      .resource-card { display: flex; min-height: 238px; flex-direction: column; padding: 28px; border: 1px solid var(--line); border-radius: 16px; background: #fbfcff; }
+      .resource-card .card-icon { margin-bottom: 19px; }
+      .resource-card p { margin: 0 0 20px; color: var(--muted); font-size: 0.94rem; }
+      .resource-card a { display: inline-flex; align-items: center; gap: 8px; width: fit-content; margin-top: auto; color: var(--blue); font-size: 0.9rem; font-weight: 850; }
+      .resource-card a::after { content: "↗"; font-size: 1.05rem; }
+
+      .standards { background: var(--white); }
+      .standards-grid { display: grid; grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.2fr); gap: 58px; align-items: start; }
+      .standards-copy { color: var(--muted); font-size: 1.03rem; }
+      .rules { display: grid; gap: 11px; margin: 0; padding: 0; list-style: none; }
+      .rule { display: grid; grid-template-columns: 42px 1fr; gap: 14px; align-items: start; padding: 18px; border: 1px solid var(--line); border-radius: 13px; background: #fbfcff; }
+      .rule-number { display: grid; width: 35px; height: 35px; place-items: center; border-radius: 50%; color: var(--sage); background: var(--sage-pale); font-size: 0.79rem; font-weight: 900; }
+      .rule strong { display: block; margin-bottom: 4px; color: var(--navy); font-size: 0.98rem; }
+      .rule p { margin: 0; color: var(--muted); font-size: 0.91rem; }
+
+      .support { background: #f3f7ff; }
+      .support-grid { display: grid; grid-template-columns: minmax(250px, 0.72fr) minmax(0, 1.28fr); gap: 42px; }
+      .experience { padding: 30px; border-radius: 18px; background: var(--navy); box-shadow: var(--shadow); }
+      .experience h3 { margin-bottom: 19px; color: var(--white); font-size: 1.35rem; }
+      .experience ul { display: grid; gap: 15px; margin: 0; padding: 0; list-style: none; }
+      .experience li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; color: #dce7ff; font-size: 0.93rem; }
+      .experience li::before { color: #b7d78a; content: "✓"; font-weight: 900; }
+      .sources { background: var(--white); }
+      .source-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .source { display: grid; min-height: 165px; grid-template-columns: 1fr auto; align-items: end; gap: 17px; padding: 25px; border: 1px solid var(--line); border-radius: 15px; background: #fbfcff; }
+      .source .source-label { display: block; margin-bottom: 11px; color: var(--sage); font-size: 0.72rem; font-weight: 850; letter-spacing: 0.1em; text-transform: uppercase; }
+      .source h3 { margin-bottom: 7px; font-size: 1.07rem; }
+      .source p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+      .source-arrow { display: grid; width: 35px; height: 35px; place-items: center; border: 1px solid #bdcae1; border-radius: 50%; color: var(--blue); font-size: 1.12rem; transition: transform 150ms ease; }
+      .source:hover .source-arrow { transform: translate(2px, -2px); color: var(--white); background: var(--blue); }
+
+      .boundaries { padding: 78px 0; color: var(--white); background: var(--navy); }
+      .boundaries h2 { color: var(--white); }
+      .boundaries .eyebrow { color: #b7d78a; }
+      .boundary-grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 65px; align-items: start; }
+      .boundaries p { max-width: 515px; margin: 0; color: #d6e1fc; }
+      .boundary-list { display: grid; gap: 13px; margin: 0; padding: 0; list-style: none; }
+      .boundary-list li { padding: 15px 0 15px 30px; border-bottom: 1px solid rgba(255,255,255,0.16); color: #eef3ff; font-size: 0.95rem; }
+      .boundary-list li::before { position: absolute; margin-left: -28px; color: #b7d78a; content: "•"; font-size: 1.4rem; line-height: 0.85; }
+
+      .cta { padding: 86px 0; text-align: center; background: linear-gradient(135deg, #eef7e5, #e5edff); }
+      .cta h2 { max-width: 690px; margin: 0 auto 17px; }
+      .cta p { max-width: 610px; margin: 0 auto 27px; color: #43516a; }
+      .cta .button { margin: 0 5px; }
+
+      footer { padding: 45px 0 28px; color: #bcc9e5; background: #0d2356; }
+      .footer-grid { display: grid; grid-template-columns: 1fr auto; gap: 35px; padding-bottom: 29px; border-bottom: 1px solid rgba(255,255,255,0.15); }
+      .footer-brand { color: var(--white); }
+      .footer-brand small { display: block; margin-top: 10px; color: #b9c8e7; font-size: 0.88rem; }
+      .footer-links { display: flex; flex-wrap: wrap; align-items: start; justify-content: end; gap: 16px 23px; font-size: 0.88rem; }
+      .footer-links a:hover { color: var(--white); }
+      .footer-note { margin: 25px 0 0; color: #aab9d8; font-size: 0.78rem; }
+
+      @media (max-width: 850px) {
+        .hero { padding-top: 70px; }
+        .hero-grid, .section-intro, .carer-layout, .circle-grid, .support-grid, .standards-grid, .boundary-grid { grid-template-columns: 1fr; gap: 34px; }
+        .section-intro { align-items: start; }
+        .hero-panel { max-width: 520px; }
+        .card-grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 690px) {
+        .container { width: min(100% - 32px, 1120px); }
+        .nav { min-height: 70px; }
+        .menu-button { display: block; }
+        .nav-links { display: none; position: absolute; top: 69px; right: 16px; left: 16px; flex-direction: column; align-items: stretch; gap: 0; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); box-shadow: var(--shadow); }
+        .nav-links.open { display: flex; }
+        .nav-links a { padding: 11px 12px; }
+        .hero { padding-bottom: 56px; }
+        section { padding: 72px 0; }
+        .trust-band .container { grid-template-columns: 1fr; }
+        .trust-item, .trust-item:first-child { min-height: 67px; border-right: 0; border-left: 0; border-bottom: 1px solid #e4eaf3; }
+        .trust-item:last-child { border-bottom: 0; }
+        .source-grid, .library-grid { grid-template-columns: 1fr; }
+        .footer-grid { grid-template-columns: 1fr; }
+        .footer-links { justify-content: start; }
+        .hero-actions .button, .cta .button { width: 100%; margin: 0 0 10px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="container nav" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="The Clara Path home">
+          <svg class="brand-mark" viewBox="0 0 42 42" aria-hidden="true">
+            <path d="M33.2 8.4C24.5 6.2 16.9 10.1 13.6 17.4c-3.5 7.7.6 15.2 7.9 15.6 5.5.3 9.3-3.9 10.3-8.5" fill="none" stroke="#1e3a8a" stroke-linecap="round" stroke-width="5"/>
+            <path d="M31.7 24.6c-1.5 4.6-5.4 8.5-10.2 8.5" fill="none" stroke="#4d7c0f" stroke-linecap="round" stroke-width="5"/>
+            <circle cx="33" cy="10" r="4" fill="#4d7c0f"/>
+          </svg>
+          <span class="brand-copy"><strong>The Clara Path</strong><span>Your guide to health &amp; social support</span></span>
+        </a>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <div class="nav-links" id="nav-links">
+          <a href="#carers">Carer’s Circle</a>
+          <a href="#resources">Resources</a>
+          <a href="#community">Community standards</a>
+          <a href="#sources">Official sources</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">The Clara Path Carer’s Circle</p>
+            <h1>You are no longer fighting the system alone.</h1>
+            <p class="lede">A supportive, organised space for family carers navigating the UK health and social care system—so you can prepare with clarity, ask better questions and find reliable starting points.</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#carers">Explore the Carer’s Circle</a>
+              <a class="button button-secondary" href="#resources">Explore resources</a>
+            </div>
+          </div>
+          <aside class="hero-panel" aria-label="The Clara Path approach">
+            <p class="eyebrow">Your next step</p>
+            <h2>From overwhelm to a more organised way forward.</h2>
+            <p>We bring together clear information, careful preparation and the right questions for the right organisation.</p>
+            <div class="route">
+              <div class="route-line" aria-hidden="true"></div>
+              <div><strong>Support with clear boundaries</strong><span>Careful navigation that respects the role of qualified health, legal and statutory professionals.</span></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <div class="trust-band" aria-label="Service principles">
+        <div class="container">
+          <div class="trust-item"><span class="trust-dot"></span>Plain-English guidance for complex systems</div>
+          <div class="trust-item"><span class="trust-dot"></span>Community standards that protect privacy</div>
+          <div class="trust-item"><span class="trust-dot"></span>Trusted links to official sources</div>
+        </div>
+      </div>
+
+      <section class="carers" id="carers">
+        <div class="container">
+          <div class="section-intro">
+            <div>
+              <p class="eyebrow">Welcome to the Carer’s Circle</p>
+              <h2>Clarity, community and a practical way forward.</h2>
+            </div>
+            <p>Supporting someone you love should not mean having to decipher every form, pathway and assessment alone. The Clara Path offers a calm, organised place to begin when the system feels hard to navigate.</p>
+          </div>
+          <div class="carer-layout">
+            <div class="carer-copy">
+              <p>When a loved one has physical, cognitive or mental-health needs, the demands of caring can become overwhelming. Paperwork, assessments and changing criteria across local authorities and the NHS can leave families feeling isolated and unsure what to do next.</p>
+              <p>The Carer’s Circle is built to make that journey less lonely. It brings together thoughtful navigation, useful preparation and responsible signposting, helping you identify relevant routes, understand the questions to ask and approach the next conversation with greater confidence.</p>
+              <p>We translate complex public information into clearer, practical preparation. Decisions about funding, care, treatment and legal matters remain with the appropriate authority or qualified professional.</p>
+            </div>
+            <aside class="quote-card">
+              <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M13.4 8.4C8.6 10.1 6 13.9 6 19.3c0 2.8 1.6 4.3 3.8 4.3 2.3 0 4-1.7 4-4.1 0-1.9-1.2-3.3-3.1-3.8.4-1.7 1.7-3.3 4.2-4.6L13.4 8.4Zm12.1 0c-4.8 1.7-7.4 5.5-7.4 10.9 0 2.8 1.6 4.3 3.8 4.3 2.3 0 4-1.7 4-4.1 0-1.9-1.2-3.3-3.1-3.8.4-1.7 1.7-3.3 4.2-4.6l-1.5-2.7Z"/></svg>
+              <p>“No judgement. No question is silly. A calmer next step can make a difficult system feel possible again.”</p>
+              <span>The Clara Path Carer’s Circle</span>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-we-help">
+        <div class="container">
+          <div class="section-intro">
+            <div>
+              <p class="eyebrow">What the Circle offers</p>
+              <h2>Practical support for the moments that matter.</h2>
+            </div>
+            <p>The Circle brings together preparation, responsible signposting and shared learning so carers can use their time with councils, NHS teams, charities and regulated providers more effectively.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <div class="card-icon" aria-hidden="true">01</div>
+              <h3>Understand the route</h3>
+              <p>Plain-English explanations of common health and social-care routes, including assessments, carers’ support and Continuing Healthcare information.</p>
+            </article>
+            <article class="card">
+              <div class="card-icon" aria-hidden="true">02</div>
+              <h3>Prepare with confidence</h3>
+              <p>Organise the key facts, documents and questions that can make your next appointment or assessment conversation more productive.</p>
+            </article>
+            <article class="card">
+              <div class="card-icon" aria-hidden="true">03</div>
+              <h3>Learn alongside others</h3>
+              <p>Use the resource library and Circle discussions to build your understanding without relying on unverified information, provider ratings or eligibility promises.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="support" id="start">
+        <div class="container support-grid">
+          <aside class="experience">
+            <h3>Care-aware experience</h3>
+            <p>The Carer’s Circle draws on experience across health and social-care settings.</p>
+            <ul>
+              <li>Continuing Healthcare nursing and case-management experience</li>
+              <li>Community, mental-health and learning-disability nursing perspectives</li>
+              <li>District nursing, social work and independent care-management insight</li>
+            </ul>
+          </aside>
+          <div>
+            <p class="eyebrow">Your three-step quick start</p>
+            <h2>Begin with the question that matters most.</h2>
+            <div class="steps">
+              <article class="step"><span class="step-number">01</span><div><h3>Start with your situation</h3><p>Identify the part of the UK you are based in, who you care for and the one assessment or system bottleneck that is most urgent right now.</p></div></article>
+              <article class="step"><span class="step-number">02</span><div><h3>Explore the resource library</h3><p>Use practical preparation prompts and official starting points for care assessments, PIP and NHS Continuing Healthcare.</p></div></article>
+              <article class="step"><span class="step-number">03</span><div><h3>Take part in a live Q&amp;A</h3><p>Join the Circle’s monthly learning conversation to develop questions for your next step. Information remains general, educational and responsibly signposted.</p></div></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="library" id="resources">
+        <div class="container">
+          <div class="section-intro">
+            <div>
+              <p class="eyebrow">Carer resource library</p>
+              <h2>Prepare thoughtfully. Start with trusted information.</h2>
+            </div>
+            <p>These resources help you organise questions and understand common routes. They are educational starting points, not a substitute for personalised legal, medical or benefits advice.</p>
+          </div>
+          <div class="library-grid">
+            <article class="resource-card">
+              <div class="card-icon" aria-hidden="true">01</div>
+              <h3>Care Assessment Preparation</h3>
+              <p>Before an assessment, bring together your caring role, the support you provide, the impact on your wellbeing and the practical questions you need answered.</p>
+              <a href="https://www.surreycc.gov.uk/adults/carers/assessing-your-needs" target="_blank" rel="noreferrer">Read the official carer’s assessment guidance</a>
+            </article>
+            <article class="resource-card">
+              <div class="card-icon" aria-hidden="true">02</div>
+              <h3>PIP decision and appeal information</h3>
+              <p>Understand the official process for challenging a benefit decision, including the route through mandatory reconsideration and appeal where applicable.</p>
+              <a href="https://www.gov.uk/mandatory-reconsideration" target="_blank" rel="noreferrer">Read GOV.UK guidance</a>
+            </article>
+            <article class="resource-card">
+              <div class="card-icon" aria-hidden="true">03</div>
+              <h3>NHS Continuing Healthcare</h3>
+              <p>Learn the official framework, assessment tools and public information for NHS Continuing Healthcare and NHS-funded nursing care.</p>
+              <a href="https://www.gov.uk/government/publications/national-framework-for-nhs-continuing-healthcare-and-nhs-funded-nursing-care" target="_blank" rel="noreferrer">Read the national framework</a>
+            </article>
+            <article class="resource-card">
+              <div class="card-icon" aria-hidden="true">04</div>
+              <h3>Care Act and carer support</h3>
+              <p>Explore the legislation that makes provision for adult care and support, including support for carers, before discussing local arrangements with the appropriate authority.</p>
+              <a href="https://www.legislation.gov.uk/ukpga/2014/23/contents" target="_blank" rel="noreferrer">Read the Care Act 2014</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="sources" id="sources">
+        <div class="container">
+          <div class="section-intro">
+            <div>
+              <p class="eyebrow">Official sources</p>
+              <h2>Start with information you can trust.</h2>
+            </div>
+            <p>These public resources provide a useful starting point. Always confirm current local eligibility, availability and next steps directly with the relevant organisation.</p>
+          </div>
+          <div class="source-grid">
+            <a class="source" href="https://www.surreycc.gov.uk/adults/carers/assessing-your-needs" target="_blank" rel="noreferrer">
+              <div><span class="source-label">Surrey County Council</span><h3>Carer’s assessment</h3><p>Understand who can request a free carer’s assessment and what happens next.</p></div><span class="source-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="source" href="https://www.actionforcarers.org.uk/" target="_blank" rel="noreferrer">
+              <div><span class="source-label">Registered Surrey charity</span><h3>Action for Carers Surrey</h3><p>Find local information, support, events and registration for unpaid carers.</p></div><span class="source-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="source" href="https://www.cqc.org.uk/care-services" target="_blank" rel="noreferrer">
+              <div><span class="source-label">Care Quality Commission</span><h3>Find care services</h3><p>Check registered providers, inspection information and current ratings directly.</p></div><span class="source-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="source" href="https://www.nhs.uk/conditions/social-care-and-support-guide/money-work-and-benefits/nhs-continuing-healthcare/" target="_blank" rel="noreferrer">
+              <div><span class="source-label">NHS</span><h3>Continuing Healthcare guidance</h3><p>Read the NHS overview of eligibility, assessment and review routes.</p></div><span class="source-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="standards" id="community">
+        <div class="container standards-grid">
+          <div>
+            <p class="eyebrow">Carer’s Circle community standards</p>
+            <h2>A safe, respectful space to learn and be heard.</h2>
+            <p class="standards-copy">Caring can be emotionally exhausting. These standards help protect every person who chooses to take part in the Carer’s Circle.</p>
+          </div>
+          <ol class="rules">
+            <li class="rule"><span class="rule-number">01</span><div><strong>Zero judgement. Maximum empathy.</strong><p>There is no place for shaming, blame or unkindness. Questions and experiences deserve to be met with care and respect.</p></div></li>
+            <li class="rule"><span class="rule-number">02</span><div><strong>Protect personal privacy.</strong><p>Do not post names, addresses, dates of birth, reference numbers, barcodes or unredacted official documents. Always remove identifying information from anything you share.</p></div></li>
+            <li class="rule"><span class="rule-number">03</span><div><strong>Information, not formal advice.</strong><p>Circle resources are for education, support and practical preparation. Clinical, legal and benefits decisions must be handled by the appropriate qualified professional or authority.</p></div></li>
+            <li class="rule"><span class="rule-number">04</span><div><strong>Keep personal stories private.</strong><p>Do not screenshot, repost or share another member’s story, struggle or personal details outside the Circle.</p></div></li>
+            <li class="rule"><span class="rule-number">05</span><div><strong>No unsolicited selling or pitching.</strong><p>Do not use the Circle to market private insurance, care agencies or independent services to other members. Access may be reviewed where these standards are not respected.</p></div></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="boundaries" id="boundaries">
+        <div class="container boundary-grid">
+          <div>
+            <p class="eyebrow">Clear service boundaries</p>
+            <h2>Supportive, careful and responsible.</h2>
+            <p>The Clara Path complements existing health, social care, statutory and charitable support. We help carers prepare and navigate information; we do not replace regulated clinical, legal or statutory services.</p>
+          </div>
+          <ul class="boundary-list">
+            <li>Information and navigation support, not medical diagnosis, treatment or clinical advice.</li>
+            <li>Guidance and conversation preparation, not legal advice or statutory advocacy.</li>
+            <li>No guarantees about funding, equipment, eligibility, assessment outcomes or service availability.</li>
+            <li>Privacy-conscious support: do not share medical records, financial details or personally identifying information through public channels.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="container">
+          <p class="eyebrow">Begin with one clear step</p>
+          <h2>Better preparation can change the next conversation.</h2>
+          <p>Explore the official starting points or return to the carers section to understand how The Clara Path can support a more organised way forward.</p>
+          <a class="button button-primary" href="#sources">Explore official sources</a>
+          <a class="button button-secondary" href="#carers">For carers</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand"><strong>The Clara Path Consultants Ltd</strong><small>Your Guide to Health &amp; Social Support</small></div>
+          <div class="footer-links"><a href="#carers">For Carers</a><a href="#how-we-help">How We Help</a><a href="#sources">Official Sources</a><a href="#boundaries">Our Approach</a></div>
+        </div>
+        <p class="footer-note">© <span id="year"></span> The Clara Path Consultants Ltd. Information on this website is for general guidance and navigation support only; it is not medical, legal or regulated financial advice.</p>
+      </div>
+    </footer>
+
+    <script>
+      const menuButton = document.querySelector('.menu-button');
+      const navLinks = document.querySelector('.nav-links');
+      menuButton.addEventListener('click', () => {
+        const open = navLinks.classList.toggle('open');
+        menuButton.setAttribute('aria-expanded', String(open));
+      });
+      navLinks.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuButton.setAttribute('aria-expanded', 'false');
+      }));
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
