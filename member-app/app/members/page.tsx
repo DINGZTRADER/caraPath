@@ -1,8 +1,8 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { getMemberSession } from "../../lib/auth/session";
 
 export default async function MemberHomePage() {
-  const user = await currentUser();
-  const firstName = user?.firstName || "Member";
+  const user = await getMemberSession();
+  const firstName = user?.name?.split(" ")[0] || "Member";
 
   return (
     <main className="member-main">
