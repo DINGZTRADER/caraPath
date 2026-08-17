@@ -60,6 +60,8 @@
       .brand-copy span { color: var(--sage); font-size: 0.61rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; }
       .nav-links { display: flex; align-items: center; gap: 23px; color: #32415d; font-size: 0.92rem; font-weight: 700; }
       .nav-links a:hover { color: var(--blue); }
+      .member-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid #b7c4dc; border-radius: 10px; color: var(--blue); background: var(--white); white-space: nowrap; }
+      .member-link svg { width: 17px; height: 17px; flex: 0 0 auto; }
       .menu-button { display: none; border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; color: var(--navy); background: var(--white); font: inherit; font-weight: 800; }
 
       .hero { overflow: hidden; position: relative; padding: 94px 0 76px; background: linear-gradient(135deg, #ffffff 0%, #ffffff 52%, #eaf1ff 100%); }
@@ -190,6 +192,7 @@
         .nav-links { display: none; position: absolute; top: 69px; right: 16px; left: 16px; flex-direction: column; align-items: stretch; gap: 0; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); box-shadow: var(--shadow); }
         .nav-links.open { display: flex; }
         .nav-links a { padding: 11px 12px; }
+        .member-link { justify-content: flex-start; }
         .hero { padding-bottom: 56px; }
         section { padding: 72px 0; }
         .trust-band .container { grid-template-columns: 1fr; }
@@ -219,6 +222,10 @@
           <a href="#resources">Resources</a>
           <a href="#community">Community standards</a>
           <a href="#sources">Official sources</a>
+          <a class="member-link" href="https://members.theclarapath.org" aria-label="Open Member Area">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Member Area</span>
+          </a>
         </div>
       </nav>
     </header>
