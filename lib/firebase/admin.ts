@@ -1,7 +1,6 @@
 import "server-only";
 
-import { cert, getApp, getApps, initializeApp, type ServiceAccount } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
+import type { ServiceAccount } from "firebase-admin/app";
 
 function getServiceAccount() {
   const rawServiceAccount = process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON;
@@ -17,7 +16,9 @@ function getServiceAccount() {
   }
 }
 
-export function getFirebaseAdminAuth() {
+export async function getFirebaseAdminAuth() {
+  const { cert, getApp, getApps, initializeApp } = await import("firebase-admin/app");
+  const { getAuth } = await import("firebase-admin/auth");
   const app = getApps().length
     ? getApp()
     : initializeApp({ credential: cert(getServiceAccount()) });
