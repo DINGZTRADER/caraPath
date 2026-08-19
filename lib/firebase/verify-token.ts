@@ -1,15 +1,17 @@
 import "server-only";
 
-import { decodeProtectedHeader, importX509, jwtVerify, type JWTPayload } from "jose";
+import { decodeProtectedHeader, importX509, jwtVerify } from "jose";
 
 const FIREBASE_PROJECT_ID = "carapath-73955";
 const FIREBASE_ISSUER = `https://securetoken.google.com/${FIREBASE_PROJECT_ID}`;
 const CERT_URL = "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com";
 
-export type FirebaseTokenPayload = JWTPayload & {
+export type FirebaseTokenPayload = {
+  sub: string;
   email?: string;
   email_verified?: boolean;
   auth_time?: number;
+  name?: string;
 };
 
 export async function verifyFirebaseIdToken(idToken: string): Promise<FirebaseTokenPayload> {
@@ -30,5 +32,13 @@ export async function verifyFirebaseIdToken(idToken: string): Promise<FirebaseTo
     issuer: FIREBASE_ISSUER
   });
 
-  return payload as FirebaseTokenPayload;
+  if (typeof payload.sub !== "string") throw new Error("Firebase token has no subject.");
+
+  return {
+    sub: payload.sub,
+    email: typeof payload.email === "string" ? payload.email : undefined,
+    email_verified: payload.email_verified === true,
+    auth_time: typeof payload.auth_time === "number" ? payload.auth_time : undefined,
+    name: typeof payload.name === "string" ? payload.name : undefined
+  };
 }
