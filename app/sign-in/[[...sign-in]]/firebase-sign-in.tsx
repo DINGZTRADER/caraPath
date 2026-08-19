@@ -4,18 +4,14 @@ import {
   browserSessionPersistence,
   getRedirectResult,
   GoogleAuthProvider,
-  isSignInWithEmailLink,
-  sendSignInLinkToEmail,
   setPersistence,
-  signInWithEmailLink,
+  signInWithEmailAndPassword,
   signInWithRedirect,
   signOut,
   type User
 } from "firebase/auth";
 import { type FormEvent, useEffect, useState } from "react";
 import { getFirebaseClientAuth, hasFirebaseClientConfig } from "../../../lib/firebase/client";
-
-const EMAIL_STORAGE_KEY = "the-clara-path-email-for-sign-in";
 
 function memberDestination() {
   const destination = new URLSearchParams(window.location.search).get("redirect_url");
@@ -35,14 +31,9 @@ function GoogleIcon() {
 
 export function FirebaseSignIn() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [status, setStatus] = useState<string | null>(null);
-  const [statusTone, setStatusTone] = useState<"error" | "success" | "neutral">("neutral");
   const [isBusy, setIsBusy] = useState(false);
-
-  function showStatus(message: string, tone: "error" | "success" | "neutral" = "neutral") {
-    setStatus(message);
-    setStatusTone(tone);
-  }
 
   async function createServerSession(user: User) {
     const idToken = await user.getIdToken(true);
@@ -52,10 +43,7 @@ export function FirebaseSignIn() {
       body: JSON.stringify({ idToken })
     });
     const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-
-    if (!response.ok) {
-      throw new Error(payload?.error ?? "We could not complete your sign-in.");
-    }
+    if (!response.ok) throw new Error(payload?.error ?? "We could not complete your sign-in.");
   }
 
   async function finishSignIn(user: User) {
@@ -66,92 +54,58 @@ export function FirebaseSignIn() {
 
   useEffect(() => {
     if (!hasFirebaseClientConfig()) return;
-
     const auth = getFirebaseClientAuth();
-    let isActive = true;
+    let active = true;
 
-    async function completePendingSignIn() {
+    void (async () => {
       try {
         await setPersistence(auth, browserSessionPersistence);
-        const redirectResult = await getRedirectResult(auth);
-
-        if (redirectResult?.user) {
-          if (isActive) setIsBusy(true);
-          await finishSignIn(redirectResult.user);
-          return;
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          if (active) setIsBusy(true);
+          await finishSignIn(result.user);
         }
-
-        if (!isSignInWithEmailLink(auth, window.location.href)) return;
-        const savedEmail = window.localStorage.getItem(EMAIL_STORAGE_KEY);
-
-        if (!savedEmail) {
-          if (isActive) {
-            setStatus("Enter the email address that received the sign-in link.");
-            setStatusTone("neutral");
-          }
-          return;
-        }
-
-        if (isActive) setIsBusy(true);
-        const result = await signInWithEmailLink(auth, savedEmail, window.location.href);
-        window.localStorage.removeItem(EMAIL_STORAGE_KEY);
-        await finishSignIn(result.user);
       } catch (error) {
-        if (isActive) {
-          showStatus(error instanceof Error ? error.message : "We could not complete your sign-in.", "error");
+        if (active) {
+          setStatus(error instanceof Error ? error.message : "We could not complete your sign-in.");
           setIsBusy(false);
         }
       }
-    }
+    })();
 
-    void completePendingSignIn();
-    return () => {
-      isActive = false;
-    };
+    return () => { active = false; };
   }, []);
 
   async function signInWithGoogle() {
-    if (!hasFirebaseClientConfig()) return;
-
     setIsBusy(true);
-    showStatus("Taking you to Google…");
-
+    setStatus("Taking you to Google…");
     try {
       const auth = getFirebaseClientAuth();
       await setPersistence(auth, browserSessionPersistence);
       await signInWithRedirect(auth, new GoogleAuthProvider());
     } catch (error) {
-      showStatus(error instanceof Error ? error.message : "Google sign-in could not start.", "error");
+      setStatus(error instanceof Error ? error.message : "Google sign-in could not start.");
       setIsBusy(false);
     }
   }
 
-  async function sendEmailLink(event: FormEvent<HTMLFormElement>) {
+  async function signInWithEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const normalizedEmail = email.trim().toLowerCase();
-
-    if (!normalizedEmail || !hasFirebaseClientConfig()) return;
-
     setIsBusy(true);
-    showStatus("Sending your secure sign-in link…");
-
+    setStatus("Signing you in securely…");
     try {
       const auth = getFirebaseClientAuth();
-      await sendSignInLinkToEmail(auth, normalizedEmail, {
-        url: window.location.href,
-        handleCodeInApp: true
-      });
-      window.localStorage.setItem(EMAIL_STORAGE_KEY, normalizedEmail);
-      showStatus("Check your email for a secure sign-in link.", "success");
+      await setPersistence(auth, browserSessionPersistence);
+      const result = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
+      await finishSignIn(result.user);
     } catch (error) {
-      showStatus(error instanceof Error ? error.message : "We could not send that sign-in link.", "error");
-    } finally {
+      setStatus(error instanceof Error ? error.message : "Email sign-in could not be completed.");
       setIsBusy(false);
     }
   }
 
   if (!hasFirebaseClientConfig()) {
-    return <p className="auth-status" data-tone="neutral">The Member Area is being connected securely. Please check back shortly.</p>;
+    return <p className="auth-status">The Member Area is being connected securely. Please check back shortly.</p>;
   }
 
   return (
@@ -161,25 +115,18 @@ export function FirebaseSignIn() {
         Continue with Google
       </button>
       <div className="auth-divider">or</div>
-      <form className="auth-form" onSubmit={sendEmailLink}>
+      <form className="auth-form" onSubmit={signInWithEmail}>
         <label className="auth-label" htmlFor="member-email">
           Email address
-          <input
-            autoComplete="email"
-            className="auth-input"
-            disabled={isBusy}
-            id="member-email"
-            inputMode="email"
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="you@example.com"
-            required
-            type="email"
-            value={email}
-          />
+          <input autoComplete="email" className="auth-input" disabled={isBusy} id="member-email" onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" required type="email" value={email} />
         </label>
-        <button className="auth-submit" disabled={isBusy} type="submit">Email me a secure sign-in link</button>
+        <label className="auth-label" htmlFor="member-password">
+          Password
+          <input autoComplete="current-password" className="auth-input" disabled={isBusy} id="member-password" onChange={(event) => setPassword(event.target.value)} required type="password" value={password} />
+        </label>
+        <button className="auth-submit" disabled={isBusy} type="submit">Sign in</button>
       </form>
-      {status ? <p className="auth-status" data-tone={statusTone}>{status}</p> : null}
+      {status ? <p className="auth-status">{status}</p> : null}
       <p className="auth-help">Membership is by invitation. Use the email address registered with The Clara Path.</p>
     </div>
   );

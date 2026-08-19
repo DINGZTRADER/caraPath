@@ -1,36 +1,32 @@
 import "server-only";
 
-import type { DecodedIdToken } from "firebase-admin/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { getFirebaseAdminAuth } from "../firebase/admin";
+import { verifyFirebaseIdToken, type FirebaseTokenPayload } from "../firebase/verify-token";
 
 export const SESSION_COOKIE_NAME = "the_clara_path_session";
-export const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 5;
+export const SESSION_DURATION_SECONDS = 55 * 60;
 
 function allowedEmails() {
-  return new Set(
-    (process.env.FIREBASE_MEMBER_EMAILS ?? "")
-      .split(",")
-      .map((email) => email.trim().toLowerCase())
-      .filter(Boolean)
-  );
+  const configured = (process.env.FIREBASE_MEMBER_EMAILS ?? "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+
+  return new Set(configured.length ? configured : ["wachaexperience@gmail.com"]);
 }
 
 export function isAllowedMember(email: string | undefined) {
-  if (!email) return false;
-  return allowedEmails().has(email.toLowerCase());
+  return Boolean(email && allowedEmails().has(email.toLowerCase()));
 }
 
-export const getMemberSession = cache(async (): Promise<DecodedIdToken | null> => {
-  const sessionCookie = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
-
-  if (!sessionCookie) return null;
+export const getMemberSession = cache(async (): Promise<FirebaseTokenPayload | null> => {
+  const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
+  if (!token) return null;
 
   try {
-    const auth = await getFirebaseAdminAuth();
-    const session = await auth.verifySessionCookie(sessionCookie, true);
+    const session = await verifyFirebaseIdToken(token);
     return session.email_verified && isAllowedMember(session.email) ? session : null;
   } catch {
     return null;
@@ -39,10 +35,6 @@ export const getMemberSession = cache(async (): Promise<DecodedIdToken | null> =
 
 export async function requireMember() {
   const session = await getMemberSession();
-
-  if (!session) {
-    redirect("/sign-in?redirect_url=/members");
-  }
-
+  if (!session) redirect("/sign-in?redirect_url=/members");
   return session;
 }
