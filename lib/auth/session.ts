@@ -8,13 +8,18 @@ import { verifyFirebaseIdToken, type FirebaseTokenPayload } from "../firebase/ve
 export const SESSION_COOKIE_NAME = "the_clara_path_session";
 export const SESSION_DURATION_SECONDS = 55 * 60;
 
+const BUILT_IN_MEMBER_EMAILS = [
+  "wachaexperience@gmail.com",
+  "victoria.olok@gmail.com"
+];
+
 function allowedEmails() {
   const configured = (process.env.FIREBASE_MEMBER_EMAILS ?? "")
     .split(",")
     .map((email) => email.trim().toLowerCase())
     .filter(Boolean);
 
-  return new Set(configured.length ? configured : ["wachaexperience@gmail.com"]);
+  return new Set([...BUILT_IN_MEMBER_EMAILS, ...configured]);
 }
 
 export function isAllowedMember(email: string | undefined) {
