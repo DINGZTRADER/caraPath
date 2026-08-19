@@ -2,15 +2,14 @@
 
 import {
   browserSessionPersistence,
-  getRedirectResult,
   GoogleAuthProvider,
   setPersistence,
   signInWithEmailAndPassword,
-  signInWithRedirect,
+  signInWithPopup,
   signOut,
   type User
 } from "firebase/auth";
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { getFirebaseClientAuth, hasFirebaseClientConfig } from "../../../lib/firebase/client";
 
 function memberDestination() {
@@ -52,39 +51,18 @@ export function FirebaseSignIn() {
     window.location.assign(memberDestination());
   }
 
-  useEffect(() => {
-    if (!hasFirebaseClientConfig()) return;
-    const auth = getFirebaseClientAuth();
-    let active = true;
-
-    void (async () => {
-      try {
-        await setPersistence(auth, browserSessionPersistence);
-        const result = await getRedirectResult(auth);
-        if (result?.user) {
-          if (active) setIsBusy(true);
-          await finishSignIn(result.user);
-        }
-      } catch (error) {
-        if (active) {
-          setStatus(error instanceof Error ? error.message : "We could not complete your sign-in.");
-          setIsBusy(false);
-        }
-      }
-    })();
-
-    return () => { active = false; };
-  }, []);
-
   async function signInWithGoogle() {
     setIsBusy(true);
-    setStatus("Taking you to Google…");
+    setStatus("Opening Google sign-in…");
     try {
       const auth = getFirebaseClientAuth();
       await setPersistence(auth, browserSessionPersistence);
-      await signInWithRedirect(auth, new GoogleAuthProvider());
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
+      const result = await signInWithPopup(auth, provider);
+      await finishSignIn(result.user);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Google sign-in could not start.");
+      setStatus(error instanceof Error ? error.message : "Google sign-in could not be completed.");
       setIsBusy(false);
     }
   }
