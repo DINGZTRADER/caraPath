@@ -35,6 +35,16 @@ type CommunityPost = {
   replies: CommunityReply[];
 };
 
+type CommunityReport = {
+  id: string;
+  kind: "post" | "reply";
+  targetId: string;
+  postId: string;
+  reportedBy: string;
+  createdAt?: Timestamp | null;
+  status: "open";
+};
+
 const MODERATOR_EMAILS = new Set(["victoriaolok@gmail.com", "wachaexperience@gmail.com"]);
 const categories = ["Practical question", "Local knowledge", "Small win", "General support"];
 
@@ -51,6 +61,7 @@ function safeDisplayName(email: string | null | undefined, displayName: string |
 
 export function CommunityBoard() {
   const [posts, setPosts] = useState<CommunityPost[]>([]);
+  const [reports, setReports] = useState<CommunityReport[]>([]);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState(categories[0]);
@@ -58,7 +69,6 @@ export function CommunityBoard() {
   const [status, setStatus] = useState("Checking community access…");
   const [busy, setBusy] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [userLabel, setUserLabel] = useState("Member");
 
   const isModerator = useMemo(() => Boolean(userEmail && MODERATOR_EMAILS.has(userEmail.toLowerCase())), [userEmail]);
 
@@ -82,6 +92,13 @@ export function CommunityBoard() {
         };
       }));
       setPosts(loaded);
+
+      if (MODERATOR_EMAILS.has(user.email.toLowerCase())) {
+        const reportSnap = await getDocs(query(collection(db, "communityReports"), orderBy("createdAt", "desc"), limit(50)));
+        setReports(reportSnap.docs.map((reportDoc) => ({ id: reportDoc.id, ...(reportDoc.data() as Omit<CommunityReport, "id">) })));
+      } else {
+        setReports([]);
+      }
       setStatus("Community ready.");
     } catch (error) {
       setStatus(error instanceof Error ? `Community error: ${error.message}` : "Could not load the community.");
@@ -92,7 +109,6 @@ export function CommunityBoard() {
     const auth = getFirebaseClientAuth();
     return onAuthStateChanged(auth, (user) => {
       setUserEmail(user?.email ?? null);
-      setUserLabel(safeDisplayName(user?.email, user?.displayName));
       void refresh();
     });
   }, []);
@@ -199,6 +215,25 @@ export function CommunityBoard() {
     }
   }
 
+  async function dismissReport(id: string) {
+    if (!window.confirm("Mark this report as reviewed and remove it from the queue?")) return;
+    try {
+      await deleteDoc(doc(getFirebaseClientFirestore(), "communityReports", id));
+      setStatus("Report cleared.");
+      await refresh();
+    } catch (error) {
+      setStatus(error instanceof Error ? `Could not clear report: ${error.message}` : "Could not clear this report.");
+    }
+  }
+
+  function reportedContent(reportItem: CommunityReport) {
+    const post = posts.find((item) => item.id === reportItem.postId);
+    if (!post) return "Content may already have been removed.";
+    if (reportItem.kind === "post") return `${post.title}: ${post.body}`;
+    const reply = post.replies.find((item) => item.id === reportItem.targetId);
+    return reply ? `${post.title} — reply: ${reply.body}` : "Reply may already have been removed.";
+  }
+
   return (
     <div className="admin-publisher">
       <form className="auth-card" onSubmit={createPost} style={{ maxWidth: 760 }}>
@@ -219,6 +254,26 @@ export function CommunityBoard() {
         </div>
         <p className="auth-help" aria-live="polite">{status}</p>
       </form>
+
+      {isModerator ? (
+        <section style={{ marginTop: "2.5rem" }} aria-labelledby="moderation-heading">
+          <div className="member-page-head">
+            <p className="eyebrow">Moderator review</p>
+            <h2 id="moderation-heading">Flagged community content.</h2>
+          </div>
+          <div className="resource-grid">
+            {reports.map((reportItem) => (
+              <article className="resource-card" key={reportItem.id}>
+                <p className="eyebrow">{reportItem.kind} · {dateLabel(reportItem.createdAt)}</p>
+                <h3>Member flag</h3>
+                <p>{reportedContent(reportItem)}</p>
+                <button className="button button-secondary" type="button" onClick={() => void dismissReport(reportItem.id)}>Clear report</button>
+              </article>
+            ))}
+            {!reports.length ? <div className="notice">No community reports need review.</div> : null}
+          </div>
+        </section>
+      ) : null}
 
       <section style={{ marginTop: "2.5rem" }} aria-label="Community discussions">
         <div className="resource-grid">
