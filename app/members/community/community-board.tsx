@@ -1,0 +1,266 @@
+"use client";
+
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  serverTimestamp,
+  Timestamp
+} from "firebase/firestore";
+import { getFirebaseClientAuth, getFirebaseClientFirestore } from "../../../lib/firebase/client";
+
+type CommunityReply = {
+  id: string;
+  body: string;
+  authorEmail: string;
+  authorLabel: string;
+  createdAt?: Timestamp | null;
+};
+
+type CommunityPost = {
+  id: string;
+  title: string;
+  body: string;
+  category: string;
+  authorEmail: string;
+  authorLabel: string;
+  createdAt?: Timestamp | null;
+  replies: CommunityReply[];
+};
+
+const MODERATOR_EMAILS = new Set(["victoriaolok@gmail.com", "wachaexperience@gmail.com"]);
+const categories = ["Practical question", "Local knowledge", "Small win", "General support"];
+
+function dateLabel(value?: Timestamp | null) {
+  if (!value) return "Just now";
+  return value.toDate().toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
+}
+
+function safeDisplayName(email: string | null | undefined, displayName: string | null | undefined) {
+  const clean = displayName?.trim();
+  if (clean) return clean.split(/\s+/).slice(0, 2).join(" ");
+  return email?.split("@")[0] || "Member";
+}
+
+export function CommunityBoard() {
+  const [posts, setPosts] = useState<CommunityPost[]>([]);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [category, setCategory] = useState(categories[0]);
+  const [replyText, setReplyText] = useState<Record<string, string>>({});
+  const [status, setStatus] = useState("Checking community access…");
+  const [busy, setBusy] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userLabel, setUserLabel] = useState("Member");
+
+  const isModerator = useMemo(() => Boolean(userEmail && MODERATOR_EMAILS.has(userEmail.toLowerCase())), [userEmail]);
+
+  async function refresh() {
+    const auth = getFirebaseClientAuth();
+    const user = auth.currentUser;
+    if (!user?.email) {
+      setStatus("Community sign-in needs refreshing. Sign out and sign in again with your approved Clara Path account.");
+      return;
+    }
+
+    try {
+      const db = getFirebaseClientFirestore();
+      const postSnap = await getDocs(query(collection(db, "communityPosts"), orderBy("createdAt", "desc"), limit(50)));
+      const loaded = await Promise.all(postSnap.docs.map(async (postDoc) => {
+        const replySnap = await getDocs(query(collection(db, "communityPosts", postDoc.id, "replies"), orderBy("createdAt", "asc"), limit(100)));
+        return {
+          id: postDoc.id,
+          ...(postDoc.data() as Omit<CommunityPost, "id" | "replies">),
+          replies: replySnap.docs.map((replyDoc) => ({ id: replyDoc.id, ...(replyDoc.data() as Omit<CommunityReply, "id">) }))
+        };
+      }));
+      setPosts(loaded);
+      setStatus("Community ready.");
+    } catch (error) {
+      setStatus(error instanceof Error ? `Community error: ${error.message}` : "Could not load the community.");
+    }
+  }
+
+  useEffect(() => {
+    const auth = getFirebaseClientAuth();
+    return onAuthStateChanged(auth, (user) => {
+      setUserEmail(user?.email ?? null);
+      setUserLabel(safeDisplayName(user?.email, user?.displayName));
+      void refresh();
+    });
+  }, []);
+
+  async function createPost(event: FormEvent) {
+    event.preventDefault();
+    const auth = getFirebaseClientAuth();
+    const user = auth.currentUser;
+    if (!user?.email) {
+      setStatus("Your community session is not active. Sign out and sign in again.");
+      return;
+    }
+    if (!title.trim() || !body.trim()) {
+      setStatus("Add a discussion title and message first.");
+      return;
+    }
+
+    setBusy(true);
+    setStatus("Posting…");
+    try {
+      await addDoc(collection(getFirebaseClientFirestore(), "communityPosts"), {
+        title: title.trim(),
+        body: body.trim(),
+        category,
+        authorEmail: user.email.toLowerCase(),
+        authorLabel: safeDisplayName(user.email, user.displayName),
+        createdAt: serverTimestamp()
+      });
+      setTitle("");
+      setBody("");
+      setCategory(categories[0]);
+      setStatus("Posted to the Carer’s Circle.");
+      await refresh();
+    } catch (error) {
+      setStatus(error instanceof Error ? `Could not post: ${error.message}` : "Could not post this discussion.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function addReply(postId: string) {
+    const auth = getFirebaseClientAuth();
+    const user = auth.currentUser;
+    const text = replyText[postId]?.trim();
+    if (!user?.email || !text) return;
+
+    try {
+      await addDoc(collection(getFirebaseClientFirestore(), "communityPosts", postId, "replies"), {
+        body: text,
+        authorEmail: user.email.toLowerCase(),
+        authorLabel: safeDisplayName(user.email, user.displayName),
+        createdAt: serverTimestamp()
+      });
+      setReplyText((current) => ({ ...current, [postId]: "" }));
+      setStatus("Reply added.");
+      await refresh();
+    } catch (error) {
+      setStatus(error instanceof Error ? `Could not reply: ${error.message}` : "Could not add this reply.");
+    }
+  }
+
+  async function removePost(post: CommunityPost) {
+    if (!window.confirm("Delete this discussion?")) return;
+    try {
+      for (const reply of post.replies) {
+        await deleteDoc(doc(getFirebaseClientFirestore(), "communityPosts", post.id, "replies", reply.id));
+      }
+      await deleteDoc(doc(getFirebaseClientFirestore(), "communityPosts", post.id));
+      setStatus("Discussion removed.");
+      await refresh();
+    } catch (error) {
+      setStatus(error instanceof Error ? `Could not delete: ${error.message}` : "Could not delete this discussion.");
+    }
+  }
+
+  async function removeReply(postId: string, replyId: string) {
+    if (!window.confirm("Delete this reply?")) return;
+    try {
+      await deleteDoc(doc(getFirebaseClientFirestore(), "communityPosts", postId, "replies", replyId));
+      setStatus("Reply removed.");
+      await refresh();
+    } catch (error) {
+      setStatus(error instanceof Error ? `Could not delete: ${error.message}` : "Could not delete this reply.");
+    }
+  }
+
+  async function report(kind: "post" | "reply", targetId: string, postId: string) {
+    const auth = getFirebaseClientAuth();
+    const user = auth.currentUser;
+    if (!user?.email) return;
+    if (!window.confirm("Flag this content for moderator review?")) return;
+    try {
+      await addDoc(collection(getFirebaseClientFirestore(), "communityReports"), {
+        kind,
+        targetId,
+        postId,
+        reportedBy: user.email.toLowerCase(),
+        createdAt: serverTimestamp(),
+        status: "open"
+      });
+      setStatus("Thanks. This has been flagged for moderator review.");
+    } catch (error) {
+      setStatus(error instanceof Error ? `Could not flag: ${error.message}` : "Could not flag this content.");
+    }
+  }
+
+  return (
+    <div className="admin-publisher">
+      <form className="auth-card" onSubmit={createPost} style={{ maxWidth: 760 }}>
+        <p className="eyebrow">Start a discussion</p>
+        <label className="auth-label">Topic
+          <select className="auth-input" value={category} onChange={(event) => setCategory(event.target.value)}>
+            {categories.map((item) => <option key={item}>{item}</option>)}
+          </select>
+        </label>
+        <label className="auth-label">Title
+          <input className="auth-input" maxLength={120} value={title} onChange={(event) => setTitle(event.target.value)} placeholder="What would you like to ask or share?" />
+        </label>
+        <label className="auth-label">Message
+          <textarea className="auth-input" maxLength={2200} rows={6} value={body} onChange={(event) => setBody(event.target.value)} placeholder="Keep details general and remove names, addresses, reference numbers and medical records." />
+        </label>
+        <div className="hero-actions">
+          <button className="button button-primary" disabled={busy || !userEmail} type="submit">{busy ? "Posting…" : "Post to community"}</button>
+        </div>
+        <p className="auth-help" aria-live="polite">{status}</p>
+      </form>
+
+      <section style={{ marginTop: "2.5rem" }} aria-label="Community discussions">
+        <div className="resource-grid">
+          {posts.map((post) => {
+            const canDeletePost = isModerator || post.authorEmail.toLowerCase() === userEmail?.toLowerCase();
+            return (
+              <article className="resource-card" key={post.id}>
+                <p className="eyebrow">{post.category} · {dateLabel(post.createdAt)}</p>
+                <h3>{post.title}</h3>
+                <p>{post.body}</p>
+                <p className="auth-help">Shared by {post.authorLabel}</p>
+                <div className="hero-actions">
+                  {!canDeletePost ? <button className="button button-secondary" type="button" onClick={() => void report("post", post.id, post.id)}>Flag for review</button> : null}
+                  {canDeletePost ? <button className="button button-secondary" type="button" onClick={() => void removePost(post)}>{isModerator && post.authorEmail.toLowerCase() !== userEmail?.toLowerCase() ? "Moderator remove" : "Delete"}</button> : null}
+                </div>
+
+                <div style={{ marginTop: "1.5rem" }}>
+                  {post.replies.map((reply) => {
+                    const canDeleteReply = isModerator || reply.authorEmail.toLowerCase() === userEmail?.toLowerCase();
+                    return (
+                      <div className="notice" key={reply.id} style={{ marginBottom: "0.75rem" }}>
+                        <p><strong>{reply.authorLabel}</strong> · {dateLabel(reply.createdAt)}</p>
+                        <p>{reply.body}</p>
+                        <div className="hero-actions">
+                          {!canDeleteReply ? <button className="button button-secondary" type="button" onClick={() => void report("reply", reply.id, post.id)}>Flag</button> : null}
+                          {canDeleteReply ? <button className="button button-secondary" type="button" onClick={() => void removeReply(post.id, reply.id)}>Delete reply</button> : null}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  <label className="auth-label">Reply
+                    <textarea className="auth-input" maxLength={1200} rows={3} value={replyText[post.id] ?? ""} onChange={(event) => setReplyText((current) => ({ ...current, [post.id]: event.target.value }))} placeholder="Add a supportive, practical reply." />
+                  </label>
+                  <button className="button button-primary" type="button" disabled={!replyText[post.id]?.trim()} onClick={() => void addReply(post.id)}>Reply</button>
+                </div>
+              </article>
+            );
+          })}
+          {!posts.length ? <div className="notice">No discussions yet. This is a new private space—start with a general question, useful local tip or small win.</div> : null}
+        </div>
+      </section>
+    </div>
+  );
+}
