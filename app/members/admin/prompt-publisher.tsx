@@ -1,8 +1,9 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp, Timestamp } from "firebase/firestore";
-import { getFirebaseClientFirestore } from "../../../lib/firebase/client";
+import { getFirebaseClientAuth, getFirebaseClientFirestore } from "../../../lib/firebase/client";
 
 type AdminPrompt = {
   id: string;
@@ -21,45 +22,67 @@ export function PromptPublisher() {
   const [body, setBody] = useState("");
   const [publishAt, setPublishAt] = useState("");
   const [items, setItems] = useState<AdminPrompt[]>([]);
-  const [status, setStatus] = useState("Loading publisher…");
+  const [status, setStatus] = useState("Checking publisher access…");
   const [busy, setBusy] = useState(false);
+  const [firebaseReady, setFirebaseReady] = useState(false);
 
   async function refresh() {
     try {
+      const auth = getFirebaseClientAuth();
+      if (!auth.currentUser) {
+        setFirebaseReady(false);
+        setStatus("Publisher sign-in needs refreshing. Sign out, then sign in again with your approved Clara Path account.");
+        return;
+      }
+      setFirebaseReady(true);
       const db = getFirebaseClientFirestore();
       const snap = await getDocs(query(collection(db, "memberPrompts"), orderBy("createdAt", "desc")));
       setItems(snap.docs.map((item) => ({ id: item.id, ...(item.data() as Omit<AdminPrompt, "id">) })));
-      setStatus("Ready");
-    } catch {
-      setStatus("Publishing storage is not active yet. Enable Cloud Firestore and deploy the supplied security rules.");
+      setStatus("Ready to publish.");
+    } catch (error) {
+      setStatus(error instanceof Error ? `Publisher error: ${error.message}` : "Could not connect to publishing storage.");
     }
   }
 
-  useEffect(() => { void refresh(); }, []);
+  useEffect(() => {
+    const auth = getFirebaseClientAuth();
+    const unsubscribe = onAuthStateChanged(auth, () => { void refresh(); });
+    return unsubscribe;
+  }, []);
 
   async function save(mode: "draft" | "publish") {
     if (!title.trim() || !body.trim()) {
       setStatus("Add a title and prompt text first.");
       return;
     }
+    const auth = getFirebaseClientAuth();
+    if (!auth.currentUser) {
+      setFirebaseReady(false);
+      setStatus("Your Firebase publisher session is not active. Sign out, then sign in again before publishing.");
+      return;
+    }
     setBusy(true);
+    setStatus(mode === "draft" ? "Saving draft…" : publishAt ? "Scheduling prompt…" : "Publishing prompt…");
     try {
       const db = getFirebaseClientFirestore();
       const data: Record<string, unknown> = {
         title: title.trim(),
         body: body.trim(),
         createdAt: serverTimestamp(),
-        createdBy: "victoriaolok@gmail.com"
+        createdBy: auth.currentUser.email ?? "approved-publisher"
       };
       if (mode === "publish") {
         data.publishAt = publishAt ? Timestamp.fromDate(new Date(publishAt)) : Timestamp.now();
       }
       await addDoc(collection(db, "memberPrompts"), data);
-      setTitle(""); setBody(""); setPublishAt("");
-      setStatus(mode === "draft" ? "Draft saved." : publishAt ? "Prompt scheduled." : "Prompt published.");
+      const wasScheduled = Boolean(publishAt);
+      setTitle("");
+      setBody("");
+      setPublishAt("");
+      setStatus(mode === "draft" ? "Draft saved." : wasScheduled ? "Prompt scheduled." : "Prompt published.");
       await refresh();
-    } catch {
-      setStatus("Could not save. Check that Firestore is active and the Clara Path security rules are deployed.");
+    } catch (error) {
+      setStatus(error instanceof Error ? `Could not save: ${error.message}` : "Could not save this prompt.");
     } finally {
       setBusy(false);
     }
@@ -76,8 +99,8 @@ export function PromptPublisher() {
       await deleteDoc(doc(getFirebaseClientFirestore(), "memberPrompts", id));
       setStatus("Prompt deleted.");
       await refresh();
-    } catch {
-      setStatus("Could not delete this prompt.");
+    } catch (error) {
+      setStatus(error instanceof Error ? `Could not delete: ${error.message}` : "Could not delete this prompt.");
     }
   }
 
@@ -95,8 +118,8 @@ export function PromptPublisher() {
           <input className="auth-input" type="datetime-local" value={publishAt} onChange={(e) => setPublishAt(e.target.value)} />
         </label>
         <div className="hero-actions">
-          <button className="button button-primary" type="submit" disabled={busy}>{publishAt ? "Schedule prompt" : "Publish now"}</button>
-          <button className="button button-secondary" type="button" disabled={busy} onClick={() => void save("draft")}>Save draft</button>
+          <button className="button button-primary" type="submit" disabled={busy || !firebaseReady}>{publishAt ? "Schedule prompt" : "Publish now"}</button>
+          <button className="button button-secondary" type="button" disabled={busy || !firebaseReady} onClick={() => void save("draft")}>Save draft</button>
         </div>
         <p className="auth-help" aria-live="polite">{status}</p>
       </form>
