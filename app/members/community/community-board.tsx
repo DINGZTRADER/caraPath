@@ -46,7 +46,13 @@ type CommunityReport = {
 };
 
 const MODERATOR_EMAILS = new Set(["victoriaolok@gmail.com", "wachaexperience@gmail.com"]);
-const categories = ["Practical question", "Local knowledge", "Small win", "General support"];
+const categories = [
+  "📌 Announcements & Introductions",
+  "⚖️ Care Act & CHC Disputes",
+  "💰 Benefits & Grants",
+  "🏠 Direct Payments & Home Support",
+  "🤝 General Carer Support"
+];
 
 function dateLabel(value?: Timestamp | null) {
   if (!value) return "Just now";
@@ -261,7 +267,7 @@ export function CommunityBoard() {
     <div className="admin-publisher">
       <form className="auth-card" onSubmit={createPost} style={{ maxWidth: 760 }}>
         <p className="eyebrow">Start a discussion</p>
-        <label className="auth-label">Topic
+        <label className="auth-label">Channel
           <select className="auth-input" value={category} onChange={(event) => setCategory(event.target.value)}>
             {categories.map((item) => <option key={item}>{item}</option>)}
           </select>
@@ -341,7 +347,7 @@ export function CommunityBoard() {
               </article>
             );
           })}
-          {!posts.length ? <div className="notice">No discussions yet. This is a new private space—start with a general question, useful local tip or small win.</div> : null}
+          {!posts.length ? <div className="notice">No discussions yet. Start with an introduction, a current care-system bottleneck or a question in the most relevant channel.</div> : null}
         </div>
       </section>
     </div>
