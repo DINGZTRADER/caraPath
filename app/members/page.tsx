@@ -1,5 +1,14 @@
 import { getMemberSession } from "../../lib/auth/session";
 
+const options = [
+  ["Resource Vault", "Download preparation guides and templates for assessments, benefit decisions, CHC, EHCP and DFG conversations.", "/members/resources"],
+  ["Member Prompts", "Use Victoria’s regular conversation prompts to share small wins, questions, local knowledge and carer experiences.", "/members/prompts"],
+  ["Private Community", "See the plan for the low-cost private Carer’s Circle community and the standards that will protect members.", "/members/community"],
+  ["Trusted Recommendations", "Explore the developing directory for care providers, daily-living aids, assistive technology and planning tools.", "/members/recommendations"],
+  ["Calendar", "See the member calendar and confirmed Carer’s Circle dates as they are added.", "/members/calendar"],
+  ["Learning Events", "See upcoming learning sessions and booking information.", "/members/events"],
+];
+
 export default async function MemberHomePage() {
   const user = await getMemberSession();
   const firstName = user?.name?.split(" ")[0] || "Member";
@@ -10,12 +19,18 @@ export default async function MemberHomePage() {
         <section className="member-hero">
           <p className="eyebrow">Carer’s Circle Member Area</p>
           <h1>Welcome, {firstName}.</h1>
-          <p>Your protected space for reliable starting points, practical preparation and upcoming learning updates. Please keep all content general—this area does not collect case or health information.</p>
+          <p>Your protected space for practical preparation, downloadable tools, community learning and trusted starting points. Please keep content general—this area is not a case-management system and should not contain health records or identifying case information.</p>
         </section>
+
         <section className="member-grid" aria-label="Member options">
-          <article className="member-card"><span className="step-number">01</span><h3>Resource library</h3><p>Use trusted public sources and clear preparation prompts for assessments, PIP and NHS Continuing Healthcare.</p><a href="/members/resources">Open resources</a></article>
-          <article className="member-card"><span className="step-number">02</span><h3>Learning events</h3><p>See upcoming Carer’s Circle learning sessions and the process for receiving booking information.</p><a href="/members/events">View events</a></article>
-          <article className="member-card"><span className="step-number">03</span><h3>Your privacy</h3><p>Keep personal stories and identifying information out of discussion spaces and use secure professional channels for case-specific support.</p><a href="/">Read the standards</a></article>
+          {options.map(([title, detail, href], index) => (
+            <article className="member-card" key={title}>
+              <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
+              <h3>{title}</h3>
+              <p>{detail}</p>
+              <a href={href}>Open</a>
+            </article>
+          ))}
         </section>
       </div>
     </main>
