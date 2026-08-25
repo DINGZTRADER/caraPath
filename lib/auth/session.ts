@@ -19,24 +19,28 @@ export type MemberSession = FirebaseTokenPayload & {
   accessSource: "entitlement" | "grandfathered";
 };
 
+export async function resolveMemberAccess(session: FirebaseTokenPayload, idToken: string): Promise<MemberSession | null> {
+  if (!session.email_verified || !session.email) return null;
+
+  const entitlement = await getMemberEntitlement(session.sub, idToken).catch(() => null);
+  if (entitlementAllowsAccess(entitlement)) {
+    return { ...session, entitlement, accessSource: "entitlement" };
+  }
+
+  if (GRANDFATHERED_MEMBER_EMAILS.has(session.email.toLowerCase())) {
+    return { ...session, entitlement, accessSource: "grandfathered" };
+  }
+
+  return null;
+}
+
 export const getMemberSession = cache(async (): Promise<MemberSession | null> => {
   const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
 
   try {
     const session = await verifyFirebaseIdToken(token);
-    if (!session.email_verified || !session.email) return null;
-
-    const entitlement = await getMemberEntitlement(session.sub, token).catch(() => null);
-    if (entitlementAllowsAccess(entitlement)) {
-      return { ...session, entitlement, accessSource: "entitlement" };
-    }
-
-    if (GRANDFATHERED_MEMBER_EMAILS.has(session.email.toLowerCase())) {
-      return { ...session, entitlement, accessSource: "grandfathered" };
-    }
-
-    return null;
+    return await resolveMemberAccess(session, token);
   } catch {
     return null;
   }
