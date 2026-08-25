@@ -71,7 +71,7 @@ export default async function Home() {
           <div className="container">
             <div className="section-intro">
               <div><p className="eyebrow">Start here</p><h2>Three practical resources for carers.</h2></div>
-              <p>These are now core Clara Path resources: find the right council, understand common care terminology and prepare for a carer&apos;s assessment.</p>
+              <p>Find the right council, understand common care terminology, or begin a care-assessment evidence log with the free starter pages.</p>
             </div>
 
             <div className="steps">
@@ -91,15 +91,15 @@ export default async function Home() {
               </article>
               <article className="resource-card">
                 <span className="step-number">03</span>
-                <p className="eyebrow">Assessment preparation</p>
-                <h3>Preparing for a Carer&apos;s Assessment</h3>
-                <p>Think through your caring responsibilities, the impact on your wellbeing, support gaps and the questions you want to raise with the assessor.</p>
-                <a href="/local-authorities#assessment-preparation">Start preparing</a>
+                <p className="eyebrow">Free fillable starter</p>
+                <h3>Care Assessment Starter Guide</h3>
+                <p>Enter your email to unlock sample Care Act outcome prompts and a fillable one-day care evidence log before an assessment meeting.</p>
+                <a href="/free-care-assessment-guide">Get the free starter guide</a>
               </article>
             </div>
 
             <div className="notice" style={{ marginTop: "28px" }}>
-              Members can also access the protected Resource Vault with fillable preparation guides and templates for benefit decisions, CHC, EHCP, DFG and other care-related decisions.
+              Premium members can access the complete UK Care Assessment Prep Guide, two-week fillable logbook and the protected Resource Vault with benefit, CHC, EHCP, DFG and other care-related preparation tools.
               {' '}<a href="https://members.theclarapath.org/members/resources" style={{ fontWeight: 800, color: "var(--blue)" }}>Open the Member Resource Vault →</a>
             </div>
           </div>
