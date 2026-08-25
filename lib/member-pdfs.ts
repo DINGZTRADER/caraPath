@@ -380,7 +380,6 @@ export async function generateMemberPdf(slug: MemberPdfSlug) {
 
       const textField = form.createTextField(`${slug}.${fieldSpec.name}`);
       textField.enableMultiline();
-      textField.setFontSize(9.5);
       textField.addToPage(page, {
         x: MARGIN,
         y: y - fieldHeight,
