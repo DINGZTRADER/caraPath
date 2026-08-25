@@ -19,6 +19,10 @@ service cloud.firestore {
       ];
     }
 
+    function isModerator() {
+      return isPublisher();
+    }
+
     match /memberPrompts/{promptId} {
       allow get, list: if isPublisher() || (
         isCurrentMember() &&
@@ -35,6 +39,63 @@ service cloud.firestore {
         && request.resource.data.body.size() <= 2200;
 
       allow update, delete: if isPublisher();
+    }
+
+    match /communityPosts/{postId} {
+      allow get, list: if isCurrentMember();
+
+      allow create: if isCurrentMember()
+        && request.resource.data.authorEmail == request.auth.token.email
+        && request.resource.data.authorLabel is string
+        && request.resource.data.authorLabel.size() > 0
+        && request.resource.data.authorLabel.size() <= 80
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 120
+        && request.resource.data.body is string
+        && request.resource.data.body.size() > 0
+        && request.resource.data.body.size() <= 2200
+        && request.resource.data.category in [
+          'Practical question',
+          'Local knowledge',
+          'Small win',
+          'General support'
+        ];
+
+      allow update: if false;
+      allow delete: if isModerator() || (
+        isCurrentMember() && resource.data.authorEmail == request.auth.token.email
+      );
+
+      match /replies/{replyId} {
+        allow get, list: if isCurrentMember();
+
+        allow create: if isCurrentMember()
+          && request.resource.data.authorEmail == request.auth.token.email
+          && request.resource.data.authorLabel is string
+          && request.resource.data.authorLabel.size() > 0
+          && request.resource.data.authorLabel.size() <= 80
+          && request.resource.data.body is string
+          && request.resource.data.body.size() > 0
+          && request.resource.data.body.size() <= 1200;
+
+        allow update: if false;
+        allow delete: if isModerator() || (
+          isCurrentMember() && resource.data.authorEmail == request.auth.token.email
+        );
+      }
+    }
+
+    match /communityReports/{reportId} {
+      allow create: if isCurrentMember()
+        && request.resource.data.reportedBy == request.auth.token.email
+        && request.resource.data.kind in ['post', 'reply']
+        && request.resource.data.targetId is string
+        && request.resource.data.postId is string
+        && request.resource.data.status == 'open';
+
+      allow get, list, delete: if isModerator();
+      allow update: if false;
     }
 
     match /{document=**} {
