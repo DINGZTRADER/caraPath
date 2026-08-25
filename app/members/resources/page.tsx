@@ -9,27 +9,27 @@ const downloads = [
   {
     title: "Care Assessment Preparation Guide",
     detail: "A structured guide to help you think through your caring role, impact on wellbeing, support gaps and questions for an assessor.",
-    href: "/downloads/care-assessment-preparation-guide.txt"
+    href: "/members/downloads/care-assessment-preparation-guide"
   },
   {
     title: "Benefit Decision Preparation Template",
     detail: "Organise the decision, points you disagree with, evidence, real-life examples and questions before seeking advice or review.",
-    href: "/downloads/benefit-decision-preparation-template.txt"
+    href: "/members/downloads/benefit-decision-preparation-template"
   },
   {
     title: "CHC Review Preparation Template",
     detail: "Prepare questions and evidence around nature, intensity, complexity and unpredictability before a CHC review or discussion.",
-    href: "/downloads/chc-review-preparation-template.txt"
+    href: "/members/downloads/chc-review-preparation-template"
   },
   {
     title: "EHCP Review Preparation Template",
     detail: "A practical structure for reviewing current needs, provision, changes, evidence and questions before an EHCP meeting.",
-    href: "/downloads/ehcp-review-preparation-template.txt"
+    href: "/members/downloads/ehcp-review-preparation-template"
   },
   {
     title: "DFG Preparation Checklist",
     detail: "Organise the practical problem, proposed adaptation, supporting information and questions before approaching your Local Authority.",
-    href: "/downloads/dfg-preparation-checklist.txt"
+    href: "/members/downloads/dfg-preparation-checklist"
   }
 ];
 
@@ -81,10 +81,10 @@ export default function MemberResourcesPage() {
             {downloads.map((resource, index) => (
               <article className="resource-card" key={resource.title}>
                 <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
-                <p className="eyebrow">Downloadable tool</p>
+                <p className="eyebrow">Protected download</p>
                 <h3>{resource.title}</h3>
                 <p>{resource.detail}</p>
-                <a href={resource.href} download>Download template</a>
+                <a href={resource.href}>Download template</a>
               </article>
             ))}
           </div>
