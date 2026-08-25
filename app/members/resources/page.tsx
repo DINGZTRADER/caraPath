@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 const downloads = [
   {
     title: "The UK Care Assessment Prep Guide",
-    detail: "Member edition: A Plain-English Guide & Fillable Logbook to help families prepare evidence, questions and practical records before a care assessment. The Daily Care Log will be expanded when Victoria supplies the final table layout.",
+    detail: "Member edition: a plain-English guide and fillable logbook to help families prepare evidence, questions and practical records before a care assessment.",
     href: "/members/downloads/care-assessment-preparation-guide"
   },
   {
@@ -38,6 +38,15 @@ const downloads = [
   }
 ];
 
+const memberValue = [
+  { title: "Protected fillable downloads", detail: "The current Resource Vault includes six practical PDF tools, with further member templates being added as they are completed and reviewed." },
+  { title: "Private Carer’s Circle community", detail: "Topic-based member discussions covering Care Act and CHC disputes, benefits and grants, direct payments, home support and general carer support." },
+  { title: "Monthly learning and support", detail: "The Events area is designed for monthly group sessions, approved replays and short learning content as dates and recordings are confirmed." },
+  { title: "Official-source library", detail: "Direct links to current statutory guidance and official NHS/GOV.UK material, with chapter and paragraph references where useful." },
+  { title: "Prompts and practical check-ins", detail: "Regular member prompts help carers share local knowledge, form-filling bottlenecks, small wins and practical solutions." },
+  { title: "Member offers", detail: "Verified product or service discounts can be added to the Recommendations area when genuine partner offers are agreed. No discount is represented as available until it is published there." }
+];
+
 const guideRoadmap = [
   {
     title: "Eligibility Outcomes Checklist",
@@ -45,11 +54,11 @@ const guideRoadmap = [
   },
   {
     title: "Fillable Daily Care Log",
-    detail: "A two-week evidence diary for recording what support was needed, how long it took, prompting or supervision, night-time interruptions, incidents and what happened on difficult days. Final table layout is awaiting Victoria’s supplied table."
+    detail: "A two-week evidence diary for recording what support was needed, how long it took, prompting or supervision, night-time interruptions, incidents and what happened on difficult days."
   },
   {
     title: "Social Work Meeting Cheat Sheet",
-    detail: "A concise meeting-prep page covering three key questions: whether an NHS CHC Checklist referral may be appropriate, how Direct Payments and the local hourly rate work, and arranging an independent Carer’s Assessment where applicable."
+    detail: "A concise meeting-prep page covering key questions such as whether an NHS CHC Checklist referral may be appropriate, how Direct Payments work locally, and arranging a Carer’s Assessment where applicable."
   },
   {
     title: "PIP / Attendance Allowance Reconsideration Pack",
@@ -107,12 +116,28 @@ export default function MemberResourcesPage() {
         <header className="member-page-head">
           <p className="eyebrow">The Classroom</p>
           <h1>Resource Vault</h1>
-          <p className="lede">Use the classroom for simple downloadable tools, short learning guides and direct links to the official rules behind care-system decisions.</p>
+          <p className="lede">Carer’s Circle membership is £15 per month. The aim is practical value: protected tools, community support, official-source shortcuts and an expanding library that helps you prepare before difficult care-system conversations.</p>
         </header>
 
-        <div className="notice">These materials are educational preparation tools. They help you organise information and questions but do not determine eligibility, guarantee funding, or replace legal, clinical, welfare-rights or financial advice. Complete private logs on your own device; do not upload health records or identifying case documents to this site.</div>
+        <div className="notice"><strong>Non-care disclaimer:</strong> These materials are educational and administrative preparation tools. The Clara Path does not provide medical diagnosis, clinical treatment decisions, regulated personal care, legal representation or regulated financial advice, and does not determine or guarantee eligibility or funding. Complete private logs on your own device; do not upload health records or identifying case documents to this site.</div>
 
-        <section aria-labelledby="downloads-heading">
+        <section aria-labelledby="membership-value-heading" style={{ marginTop: "3rem" }}>
+          <div className="member-page-head">
+            <p className="eyebrow">Included in £15/month</p>
+            <h2 id="membership-value-heading">What Carer’s Circle membership is designed to deliver.</h2>
+          </div>
+          <div className="resource-grid">
+            {memberValue.map((item, index) => (
+              <article className="resource-card" key={item.title}>
+                <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
+                <h3>{item.title}</h3>
+                <p>{item.detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="downloads-heading" style={{ marginTop: "3rem" }}>
           <div className="member-page-head">
             <p className="eyebrow">Premium member downloads</p>
             <h2 id="downloads-heading">Fill them in digitally or print them.</h2>
@@ -132,9 +157,9 @@ export default function MemberResourcesPage() {
 
         <section aria-labelledby="guide-roadmap-heading" style={{ marginTop: "3rem" }}>
           <div className="member-page-head">
-            <p className="eyebrow">Full guide structure</p>
+            <p className="eyebrow">Guide development roadmap</p>
             <h2 id="guide-roadmap-heading">The UK Care Assessment Prep Guide</h2>
-            <p className="lede">A Plain-English Guide & Fillable Logbook to Secure the Funding and Support Your Family is Legally Entitled To.</p>
+            <p className="lede">A plain-English guide and fillable logbook for organising evidence, understanding the relevant routes and preparing confidently for assessment conversations.</p>
           </div>
           <div className="resource-grid">
             {guideRoadmap.map((resource, index) => (
@@ -171,7 +196,7 @@ export default function MemberResourcesPage() {
             <p className="eyebrow">Short audio guides</p>
             <h2 id="audio-heading">Listen before a difficult conversation.</h2>
           </div>
-          <div className="notice">Audio explainers will sit here alongside the PDFs as Victoria records them. The same area can also link to approved YouTube replays or clips from monthly Carer’s Circle sessions.</div>
+          <div className="notice">Audio explainers will sit here as approved recordings are produced. The same area can link to approved YouTube replays or clips from confirmed Carer’s Circle sessions.</div>
         </section>
       </div>
     </main>
