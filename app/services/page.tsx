@@ -3,8 +3,9 @@ import { PublicHeader } from "../public-header";
 import styles from "../public-resources.module.css";
 
 export const metadata: Metadata = {
-  title: "Paid Care Navigation & Advocacy Services | The Clara Path",
-  description: "Administrative support, advocacy, CHC preparation and care-system navigation for UK family carers."
+  title: "Paid Care Navigation, CHC Resources & Consultations | The Clara Path",
+  description: "Administrative support, advocacy, CHC preparation, digital learning resources and care-system navigation for UK family carers.",
+  alternates: { canonical: "https://www.theclarapath.org/services" }
 };
 
 const services = [
@@ -40,6 +41,36 @@ const services = [
   }
 ];
 
+const digitalOffers = [
+  {
+    id: "chc-masterclass",
+    title: "De-Mystifying CHC Masterclass",
+    price: "Planned £49–£99",
+    memberAccess: "Member inclusion: to be confirmed",
+    detail: "A pre-recorded learning product explaining the NHS Continuing Healthcare Checklist, the Decision Support Tool and the role of nature, intensity, complexity and unpredictability in the primary-health-need decision.",
+    format: "Planned format: video masterclass and/or comprehensive fillable guide",
+    status: "Product in development"
+  },
+  {
+    id: "evidence-trackers",
+    title: "Care Assessment Evidence Trackers",
+    price: "Planned £25",
+    memberAccess: "Member inclusion: to be confirmed",
+    detail: "Downloadable trackers designed to help families organise accurate, dated observations before an MDT, CHC review or other care-system meeting. Templates will focus on frequency, duration, risks, interventions and changes over time rather than trying to score eligibility independently.",
+    format: "Planned format: fillable PDF + spreadsheet templates",
+    status: "Product in development"
+  },
+  {
+    id: "video-consultation",
+    title: "1-to-1 Video Consultation",
+    price: "Planned £150–£250 / 60 minutes",
+    memberAccess: "Member discount/inclusion: to be confirmed",
+    detail: "A focused 60-minute strategy session for families who want help organising the next practical steps, questions and evidence before engaging with an NHS or Local Authority process.",
+    format: "Planned delivery: Zoom or Microsoft Teams with automated booking",
+    status: "Booking system to be activated after final service rules are approved"
+  }
+];
+
 export default function ServicesPage() {
   return (
     <div className={styles.page}>
@@ -48,15 +79,15 @@ export default function ServicesPage() {
         <section className={styles.hero}>
           <div className={styles.container}>
             <p className={styles.eyebrow}>Paid support</p>
-            <h1>Experienced navigation and advocacy when the system becomes difficult.</h1>
-            <p className={styles.lede}>The Clara Path provides administrative support, evidence preparation, advocacy and health-and-social-care system navigation for families who want more hands-on help.</p>
-            <div className={styles.notice}><strong>Important non-care disclaimer:</strong> The Clara Path does not provide medical diagnosis, clinical treatment decisions, regulated personal care, legal representation or regulated financial advice. Decisions about NHS funding, Local Authority support and state benefits remain with the relevant statutory body.</div>
+            <h1>Experienced navigation and practical tools when the system becomes difficult.</h1>
+            <p className={styles.lede}>The Clara Path combines hands-on administrative support with focused learning products, evidence tools and consultations for families who want more structured help.</p>
+            <div className={styles.notice}><strong>Important professional boundary:</strong> The Clara Path does not provide medical diagnosis, clinical treatment decisions, regulated personal care, legal representation or regulated financial advice. Decisions about NHS funding, Local Authority support and state benefits remain with the relevant statutory body.</div>
           </div>
         </section>
 
         <section className={styles.section}>
           <div className={styles.container}>
-            <p className={styles.eyebrow}>Service menu</p>
+            <p className={styles.eyebrow}>Hands-on services</p>
             <h2>Choose the level of support your family needs.</h2>
             <div className={styles.grid} style={{ marginTop: "2rem" }}>
               {services.map((service) => (
@@ -67,6 +98,29 @@ export default function ServicesPage() {
                   <ul>{service.includes.map((item) => <li key={item}>{item}</li>)}</ul>
                 </article>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.section} aria-labelledby="digital-services-heading">
+          <div className={styles.container}>
+            <p className={styles.eyebrow}>Digital products & consultations</p>
+            <h2 id="digital-services-heading">Lower-cost ways to prepare before buying full case support.</h2>
+            <p>Prices and subscriber access below are provisional while the final Carer’s Circle membership benefits are being set.</p>
+            <div className={styles.grid} style={{ marginTop: "2rem" }}>
+              {digitalOffers.map((offer) => (
+                <article className={styles.card} id={offer.id} key={offer.id}>
+                  <p className={styles.eyebrow}>{offer.price}</p>
+                  <h3>{offer.title}</h3>
+                  <p><strong>{offer.memberAccess}</strong></p>
+                  <p>{offer.detail}</p>
+                  <p>{offer.format}</p>
+                  <div className={styles.notice}>{offer.status}</div>
+                </article>
+              ))}
+            </div>
+            <div className={styles.notice} style={{ marginTop: "2rem" }}>
+              <strong>Commercial setup pending:</strong> checkout, member discounts/free entitlement rules and automated Zoom/Microsoft Teams booking will only be activated once final prices, refund/cancellation terms, booking availability and subscriber benefits are approved.
             </div>
           </div>
         </section>
