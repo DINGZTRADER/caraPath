@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isCurrentMember() {
+      return signedIn() && request.auth.token.email in [
+        'victoriaolok@gmail.com',
+        'wachaexperience@gmail.com'
+      ];
+    }
+
+    function isPublisher() {
+      return signedIn() && request.auth.token.email in [
+        'victoriaolok@gmail.com',
+        'wachaexperience@gmail.com'
+      ];
+    }
+
+    match /memberPrompts/{promptId} {
+      allow get, list: if isPublisher() || (
+        isCurrentMember() &&
+        resource.data.publishAt is timestamp &&
+        resource.data.publishAt <= request.time
+      );
+
+      allow create: if isPublisher()
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 120
+        && request.resource.data.body is string
+        && request.resource.data.body.size() > 0
+        && request.resource.data.body.size() <= 2200;
+
+      allow update, delete: if isPublisher();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
