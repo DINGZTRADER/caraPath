@@ -6,7 +6,6 @@ import {
   setPersistence,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signOut,
   type User
 } from "firebase/auth";
 import { type FormEvent, useState } from "react";
@@ -47,7 +46,6 @@ export function FirebaseSignIn() {
 
   async function finishSignIn(user: User) {
     await createServerSession(user);
-    await signOut(getFirebaseClientAuth());
     window.location.assign(memberDestination());
   }
 
