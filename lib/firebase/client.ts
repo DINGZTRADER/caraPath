@@ -1,5 +1,6 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? "AIzaSyBB8DvmSPMLs9Ri2H6nTTFIlqKCUlHUlNc",
@@ -12,11 +13,17 @@ export function hasFirebaseClientConfig() {
   return Object.values(firebaseConfig).every(Boolean);
 }
 
-export function getFirebaseClientAuth() {
+function getFirebaseClientApp() {
   if (!hasFirebaseClientConfig()) {
     throw new Error("Firebase web configuration is incomplete.");
   }
+  return getApps().length ? getApp() : initializeApp(firebaseConfig);
+}
 
-  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-  return getAuth(app);
+export function getFirebaseClientAuth() {
+  return getAuth(getFirebaseClientApp());
+}
+
+export function getFirebaseClientFirestore() {
+  return getFirestore(getFirebaseClientApp());
 }
