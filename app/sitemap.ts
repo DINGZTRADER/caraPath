@@ -19,6 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.9
+    },
+    {
+      url: "https://www.theclarapath.org/services",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9
     }
   ];
 }
