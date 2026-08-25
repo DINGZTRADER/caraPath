@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
 import {
   addDoc,
   collection,
@@ -69,6 +69,7 @@ export function CommunityBoard() {
   const [status, setStatus] = useState("Checking community access…");
   const [busy, setBusy] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [authKnown, setAuthKnown] = useState(false);
 
   const isModerator = useMemo(() => Boolean(userEmail && MODERATOR_EMAILS.has(userEmail.toLowerCase())), [userEmail]);
 
@@ -76,7 +77,7 @@ export function CommunityBoard() {
     const auth = getFirebaseClientAuth();
     const user = auth.currentUser;
     if (!user?.email) {
-      setStatus("Community sign-in needs refreshing. Sign out and sign in again with your approved Clara Path account.");
+      setStatus("Your secure member page is open, but the Firebase community session is missing. Use ‘Refresh community sign-in’ below.");
       return;
     }
 
@@ -108,17 +109,29 @@ export function CommunityBoard() {
   useEffect(() => {
     const auth = getFirebaseClientAuth();
     return onAuthStateChanged(auth, (user) => {
+      setAuthKnown(true);
       setUserEmail(user?.email ?? null);
       void refresh();
     });
   }, []);
+
+  async function refreshCommunitySignIn() {
+    setBusy(true);
+    setStatus("Refreshing secure community sign-in…");
+    try {
+      await fetch("/api/auth/session", { method: "DELETE" });
+      await firebaseSignOut(getFirebaseClientAuth()).catch(() => undefined);
+    } finally {
+      window.location.assign("/sign-in?redirect_url=%2Fmembers%2Fcommunity");
+    }
+  }
 
   async function createPost(event: FormEvent) {
     event.preventDefault();
     const auth = getFirebaseClientAuth();
     const user = auth.currentUser;
     if (!user?.email) {
-      setStatus("Your community session is not active. Sign out and sign in again.");
+      setStatus("Community sign-in is not active. Use ‘Refresh community sign-in’ and sign in with Google again.");
       return;
     }
     if (!title.trim() || !body.trim()) {
@@ -153,7 +166,14 @@ export function CommunityBoard() {
     const auth = getFirebaseClientAuth();
     const user = auth.currentUser;
     const text = replyText[postId]?.trim();
-    if (!user?.email || !text) return;
+    if (!text) {
+      setStatus("Write a reply first.");
+      return;
+    }
+    if (!user?.email) {
+      setStatus("Community sign-in is not active. Use ‘Refresh community sign-in’ and sign in again.");
+      return;
+    }
 
     try {
       await addDoc(collection(getFirebaseClientFirestore(), "communityPosts", postId, "replies"), {
@@ -198,7 +218,10 @@ export function CommunityBoard() {
   async function report(kind: "post" | "reply", targetId: string, postId: string) {
     const auth = getFirebaseClientAuth();
     const user = auth.currentUser;
-    if (!user?.email) return;
+    if (!user?.email) {
+      setStatus("Community sign-in is not active. Refresh community sign-in before flagging content.");
+      return;
+    }
     if (!window.confirm("Flag this content for moderator review?")) return;
     try {
       await addDoc(collection(getFirebaseClientFirestore(), "communityReports"), {
@@ -250,7 +273,12 @@ export function CommunityBoard() {
           <textarea className="auth-input" maxLength={2200} rows={6} value={body} onChange={(event) => setBody(event.target.value)} placeholder="Keep details general and remove names, addresses, reference numbers and medical records." />
         </label>
         <div className="hero-actions">
-          <button className="button button-primary" disabled={busy || !userEmail} type="submit">{busy ? "Posting…" : "Post to community"}</button>
+          <button className="button button-primary" disabled={busy} type="submit">{busy ? "Working…" : "Post to community"}</button>
+          {authKnown && !userEmail ? (
+            <button className="button button-secondary" disabled={busy} type="button" onClick={() => void refreshCommunitySignIn()}>
+              Refresh community sign-in
+            </button>
+          ) : null}
         </div>
         <p className="auth-help" aria-live="polite">{status}</p>
       </form>
@@ -308,7 +336,7 @@ export function CommunityBoard() {
                   <label className="auth-label">Reply
                     <textarea className="auth-input" maxLength={1200} rows={3} value={replyText[post.id] ?? ""} onChange={(event) => setReplyText((current) => ({ ...current, [post.id]: event.target.value }))} placeholder="Add a supportive, practical reply." />
                   </label>
-                  <button className="button button-primary" type="button" disabled={!replyText[post.id]?.trim()} onClick={() => void addReply(post.id)}>Reply</button>
+                  <button className="button button-primary" type="button" onClick={() => void addReply(post.id)}>Reply</button>
                 </div>
               </article>
             );
