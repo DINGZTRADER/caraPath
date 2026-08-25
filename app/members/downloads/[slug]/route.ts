@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMemberSession } from "../../../../lib/auth/session";
-import { memberDownloads } from "../../../../lib/member-downloads";
+import { generateMemberPdf, isMemberPdfSlug } from "../../../../lib/member-pdfs";
 
 export const runtime = "nodejs";
 
@@ -14,17 +14,22 @@ export async function GET(
   }
 
   const { slug } = await context.params;
-  const file = memberDownloads[slug];
+  if (!isMemberPdfSlug(slug)) {
+    return NextResponse.json({ error: "Download not found." }, { status: 404 });
+  }
+
+  const file = await generateMemberPdf(slug);
   if (!file) {
     return NextResponse.json({ error: "Download not found." }, { status: 404 });
   }
 
-  return new NextResponse(file.content, {
+  return new NextResponse(Buffer.from(file.bytes), {
     status: 200,
     headers: {
-      "Content-Type": "text/plain; charset=utf-8",
+      "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename="${file.filename}"`,
-      "Cache-Control": "private, no-store"
+      "Cache-Control": "private, no-store",
+      "X-Content-Type-Options": "nosniff"
     }
   });
 }
