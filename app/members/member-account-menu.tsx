@@ -1,6 +1,8 @@
 "use client";
 
+import { signOut as firebaseSignOut } from "firebase/auth";
 import { useState } from "react";
+import { getFirebaseClientAuth } from "../../lib/firebase/client";
 
 type MemberAccountMenuProps = {
   email?: string;
@@ -18,7 +20,10 @@ export function MemberAccountMenu({ email, name }: MemberAccountMenuProps) {
 
   async function signOut() {
     setIsSigningOut(true);
-    await fetch("/api/auth/session", { method: "DELETE" });
+    await Promise.allSettled([
+      fetch("/api/auth/session", { method: "DELETE" }),
+      firebaseSignOut(getFirebaseClientAuth())
+    ]);
     window.location.assign("/");
   }
 
