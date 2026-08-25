@@ -9,17 +9,17 @@ const BrandMark = () => (
 );
 
 const links = [
-  ["For Carers", "#carers"],
-  ["How We Help", "#how-we-help"],
-  ["Resources", "#resources"],
-  ["Official Sources", "#sources"]
+  ["For Carers", "/#carers"],
+  ["How We Help", "/#how-we-help"],
+  ["Resources", "/#resources"],
+  ["Paid Services", "/services"]
 ] as const;
 
 export function PublicHeader() {
   return (
     <header className={styles.header}>
       <nav className={`container ${styles.nav}`} aria-label="Primary navigation">
-        <a className={styles.brand} href="#top">
+        <a className={styles.brand} href="/#top">
           <BrandMark />
           <span className={styles.brandCopy}>
             <strong>The Clara Path</strong>
