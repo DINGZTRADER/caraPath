@@ -1,13 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-
-const BrandMark = () => (
-  <svg className="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
-    <path d="M9 33.5C15.5 33.5 18.7 28.5 23.3 21.2C27 15.2 30.7 11.4 39 11.4" fill="none" stroke="#1e3a8a" strokeLinecap="round" strokeWidth="5" />
-    <circle cx="39" cy="11.4" r="4.3" fill="#5f7f37" />
-    <path d="M9 39h30" stroke="#9bb986" strokeLinecap="round" strokeWidth="3" />
-  </svg>
-);
+import { PublicHeader } from "./public-header";
 
 export default async function Home() {
   const host = (await headers()).get("host") ?? "";
@@ -15,24 +8,7 @@ export default async function Home() {
 
   return (
     <>
-      <header className="site-header">
-        <nav className="container nav" aria-label="Primary navigation">
-          <a className="brand" href="#top">
-            <BrandMark />
-            <span className="brand-copy">
-              <strong>The Clara Path</strong>
-              <span>Your Guide to Health &amp; Social Support</span>
-            </span>
-          </a>
-          <div className="nav-links">
-            <a href="#carers">For Carers</a>
-            <a href="#how-we-help">How We Help</a>
-            <a href="#resources">Resources</a>
-            <a href="#sources">Official Sources</a>
-            <a className="button button-secondary" href="https://members.theclarapath.org">Member Area</a>
-          </div>
-        </nav>
-      </header>
+      <PublicHeader />
 
       <main>
         <section className="hero" id="top">
