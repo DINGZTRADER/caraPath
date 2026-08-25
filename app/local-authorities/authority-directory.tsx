@@ -20,6 +20,28 @@ const authorities: Authority[] = Object.entries(groups)
 
 const filters = ["All", ...Object.keys(groups)];
 
+const slugOverrides: Record<string, string> = {
+  "Canterbury City": "canterbury",
+  "Lancaster City": "lancaster",
+  "Hull": "kingston-upon-hull",
+  "City of London": "city-of-london"
+};
+
+function govCouncilSlug(name: string) {
+  if (slugOverrides[name]) return slugOverrides[name];
+  return name
+    .normalize("NFKD")
+    .replace(/[’']/g, "")
+    .replace(/&/g, "and")
+    .replace(/[^a-zA-Z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .toLowerCase();
+}
+
+function officialCouncilRoute(authority: Authority) {
+  return `https://www.gov.uk/find-local-council/${govCouncilSlug(authority.name)}`;
+}
+
 export function AuthorityDirectory() {
   const [query, setQuery] = useState("");
   const [type, setType] = useState("All");
@@ -38,9 +60,14 @@ export function AuthorityDirectory() {
         <div>
           <p className={styles.eyebrow}>Complete England directory</p>
           <h2 id="directory-heading">All 317 councils and local authorities</h2>
-          <p>Search by council name or filter by authority type. For adult social care in two-tier areas, the county council is normally the relevant authority.</p>
+          <p>Search by council name or filter by authority type. In two-tier areas, adult social care and carer’s assessments are normally handled by the county council rather than the district council.</p>
         </div>
         <div className={styles.countBadge}>{authorities.length}<span>authorities</span></div>
+      </div>
+
+      <div className={styles.notice} style={{ marginBottom: "1.5rem" }}>
+        <strong>Requesting a carer’s assessment:</strong> NHS guidance says to contact adult social services at the local council. If you select a district council below, the official GOV.UK result identifies the county council responsible for social care.{' '}
+        <a href="https://www.nhs.uk/social-care-and-support/support-and-benefits-for-carers/carer-assessments/" target="_blank" rel="noreferrer">Read the NHS carer’s assessment guide ↗</a>
       </div>
 
       <div className={styles.searchPanel}>
@@ -57,7 +84,8 @@ export function AuthorityDirectory() {
           <article className={styles.authorityCard} key={`${authority.type}-${authority.name}`}>
             <span className={styles.authorityType}>{authority.type}</span>
             <h3>{authority.name}</h3>
-            <a href="https://www.gov.uk/find-local-council" target="_blank" rel="noreferrer">Check official council details ↗</a>
+            {authority.type === "District council" ? <p>Adult social care is normally provided by the county council in this area.</p> : <p>Use the official council route to reach local services and adult social care.</p>}
+            <a href={officialCouncilRoute(authority)} target="_blank" rel="noreferrer">Open official council route ↗</a>
           </article>
         ))}
       </div>
