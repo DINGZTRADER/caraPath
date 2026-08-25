@@ -17,6 +17,33 @@ function formatDate(value?: Timestamp | null) {
   return value.toDate().toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
 }
 
+function toDateTimeLocal(date: Date) {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function nextEveryOtherDaySlot(items: AdminPrompt[]) {
+  const now = new Date();
+  const scheduled = items
+    .map((item) => item.publishAt?.toDate())
+    .filter((value): value is Date => Boolean(value))
+    .sort((a, b) => b.getTime() - a.getTime());
+
+  const latest = scheduled[0];
+  let next: Date;
+
+  if (latest && latest.getTime() > now.getTime()) {
+    next = new Date(latest);
+    next.setDate(next.getDate() + 2);
+  } else {
+    next = new Date(now);
+    next.setDate(next.getDate() + 1);
+    next.setHours(9, 0, 0, 0);
+  }
+
+  return next;
+}
+
 export function PromptPublisher() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -49,6 +76,12 @@ export function PromptPublisher() {
     const unsubscribe = onAuthStateChanged(auth, () => { void refresh(); });
     return unsubscribe;
   }, []);
+
+  function useNextSlot() {
+    const next = nextEveryOtherDaySlot(items);
+    setPublishAt(toDateTimeLocal(next));
+    setStatus(`Next every-other-day slot selected: ${next.toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}.`);
+  }
 
   async function save(mode: "draft" | "publish") {
     if (!title.trim() || !body.trim()) {
@@ -117,6 +150,10 @@ export function PromptPublisher() {
         <label className="auth-label">Publish date and time (optional)
           <input className="auth-input" type="datetime-local" value={publishAt} onChange={(e) => setPublishAt(e.target.value)} />
         </label>
+        <div className="hero-actions">
+          <button className="button button-secondary" type="button" disabled={busy || !firebaseReady} onClick={useNextSlot}>Use next every-other-day slot</button>
+        </div>
+        <p className="auth-help">The first automatic slot is tomorrow at 09:00. Each additional queued prompt is placed two days after the latest scheduled prompt. You can still change the date and time manually.</p>
         <div className="hero-actions">
           <button className="button button-primary" type="submit" disabled={busy || !firebaseReady}>{publishAt ? "Schedule prompt" : "Publish now"}</button>
           <button className="button button-secondary" type="button" disabled={busy || !firebaseReady} onClick={() => void save("draft")}>Save draft</button>
