@@ -1,0 +1,40 @@
+name: Next.js security gate
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package.json
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+
+      - name: Verify patched Next.js version
+        run: |
+          node -e "const p=require('./node_modules/next/package.json'); if(p.version!=='16.3.3'){console.error('Expected Next.js 16.3.3, got '+p.version); process.exit(1)}; console.log('Next.js '+p.version+' verified')"
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Production build
+        run: npm run build
+
+      - name: Production dependency audit
+        run: npm audit --omit=dev --audit-level=high
