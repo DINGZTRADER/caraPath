@@ -10,8 +10,8 @@ const BrandMark = () => (
 
 const links = [
   ["For Carers", "/#carers"],
-  ["How We Help", "/#how-we-help"],
   ["Resources", "/#resources"],
+  ["Insights", "/insights"],
   ["Paid Services", "/services"]
 ] as const;
 
