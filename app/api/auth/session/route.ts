@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isAllowedMember, SESSION_COOKIE_NAME, SESSION_DURATION_SECONDS } from "../../../../lib/auth/session";
+import { resolveMemberAccess, SESSION_COOKIE_NAME, SESSION_DURATION_SECONDS } from "../../../../lib/auth/session";
 import { verifyFirebaseIdToken } from "../../../../lib/firebase/verify-token";
 
 export const runtime = "nodejs";
@@ -33,9 +33,10 @@ export async function POST(request: Request) {
   try {
     const decoded = await verifyFirebaseIdToken(idToken);
     const signedInRecently = typeof decoded.auth_time === "number" && Date.now() / 1000 - decoded.auth_time < 5 * 60;
+    const memberAccess = signedInRecently ? await resolveMemberAccess(decoded, idToken) : null;
 
-    if (!signedInRecently || !decoded.email_verified || !isAllowedMember(decoded.email)) {
-      return NextResponse.json({ error: "This email has not been invited to the Member Area." }, { status: 403 });
+    if (!memberAccess) {
+      return NextResponse.json({ error: "This account does not currently have Member Area access." }, { status: 403 });
     }
 
     const response = NextResponse.json({ ok: true });
