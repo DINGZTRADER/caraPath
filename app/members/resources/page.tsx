@@ -1,20 +1,54 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Member resources",
+  title: "Member Resource Vault",
   robots: { index: false, follow: false }
 };
 
-const resources = [
+const downloads = [
   {
-    title: "Preparing for a carer’s assessment",
-    detail: "Organise what support you provide, how caring affects your wellbeing, and the questions you want to discuss.",
-    href: "https://www.surreycc.gov.uk/adults/carers/assessing-your-needs",
-    source: "Surrey County Council"
+    title: "Care Assessment Preparation Guide",
+    detail: "A structured guide to help you think through your caring role, impact on wellbeing, support gaps and questions for an assessor.",
+    href: "/downloads/care-assessment-preparation-guide.txt"
+  },
+  {
+    title: "Benefit Decision Preparation Template",
+    detail: "Organise the decision, points you disagree with, evidence, real-life examples and questions before seeking advice or review.",
+    href: "/downloads/benefit-decision-preparation-template.txt"
+  },
+  {
+    title: "CHC Review Preparation Template",
+    detail: "Prepare questions and evidence around nature, intensity, complexity and unpredictability before a CHC review or discussion.",
+    href: "/downloads/chc-review-preparation-template.txt"
+  },
+  {
+    title: "EHCP Review Preparation Template",
+    detail: "A practical structure for reviewing current needs, provision, changes, evidence and questions before an EHCP meeting.",
+    href: "/downloads/ehcp-review-preparation-template.txt"
+  },
+  {
+    title: "DFG Preparation Checklist",
+    detail: "Organise the practical problem, proposed adaptation, supporting information and questions before approaching your Local Authority.",
+    href: "/downloads/dfg-preparation-checklist.txt"
+  }
+];
+
+const officialSources = [
+  {
+    title: "Find your Local Authority",
+    detail: "Use the official postcode lookup and understand which council normally handles adult social care.",
+    href: "https://www.theclarapath.org/local-authorities",
+    source: "The Clara Path + GOV.UK"
+  },
+  {
+    title: "Care terms explained",
+    detail: "Plain-English explanations of DFG, CHC, EHCP, Direct Payments, PIP and Attendance Allowance with official-source links.",
+    href: "https://www.theclarapath.org/care-terms",
+    source: "The Clara Path"
   },
   {
     title: "PIP mandatory reconsideration",
-    detail: "Use official government information to understand the process for asking for a benefit decision to be looked at again.",
+    detail: "Understand the official process for asking for a benefit decision to be looked at again.",
     href: "https://www.gov.uk/mandatory-reconsideration",
     source: "GOV.UK"
   },
@@ -23,12 +57,6 @@ const resources = [
     detail: "Read the national framework and related public information on CHC and NHS-funded nursing care.",
     href: "https://www.gov.uk/government/publications/national-framework-for-nhs-continuing-healthcare-and-nhs-funded-nursing-care",
     source: "Department of Health and Social Care"
-  },
-  {
-    title: "Finding regulated care services",
-    detail: "Use the Care Quality Commission service finder to check registered providers and inspection information.",
-    href: "https://www.cqc.org.uk/care-services",
-    source: "Care Quality Commission"
   }
 ];
 
@@ -37,21 +65,47 @@ export default function MemberResourcesPage() {
     <main className="member-main">
       <div className="container">
         <header className="member-page-head">
-          <p className="eyebrow">Member resource library</p>
-          <h1>Reliable starting points for your next step.</h1>
-          <p className="lede">These sources support preparation and understanding. They do not provide a diagnosis, legal opinion or guarantee of eligibility, funding or service availability.</p>
+          <p className="eyebrow">Member Resource Vault</p>
+          <h1>Practical tools for difficult care-system conversations.</h1>
+          <p className="lede">Download preparation guides and templates, then use the official-source library to check current rules and routes.</p>
         </header>
-        <div className="notice">Do not upload case notes, health records, benefit letters or identifying information here. This Member Area is intentionally not a case-management system.</div>
-        <section className="resource-grid" aria-label="Member resources">
-          {resources.map((resource, index) => (
-            <article className="resource-card" key={resource.title}>
-              <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
-              <p className="eyebrow">{resource.source}</p>
-              <h3>{resource.title}</h3>
-              <p>{resource.detail}</p>
-              <a href={resource.href} target="_blank" rel="noreferrer">Open official source</a>
-            </article>
-          ))}
+
+        <div className="notice">These materials are educational tools. They help you organise information and questions but do not replace legal, clinical, welfare-rights or financial advice. Do not upload private records to this site.</div>
+
+        <section aria-labelledby="downloads-heading">
+          <div className="member-page-head">
+            <p className="eyebrow">Member downloads</p>
+            <h2 id="downloads-heading">Download and work through them at your own pace.</h2>
+          </div>
+          <div className="resource-grid">
+            {downloads.map((resource, index) => (
+              <article className="resource-card" key={resource.title}>
+                <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
+                <p className="eyebrow">Downloadable tool</p>
+                <h3>{resource.title}</h3>
+                <p>{resource.detail}</p>
+                <a href={resource.href} download>Download template</a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="sources-heading" style={{ marginTop: "3rem" }}>
+          <div className="member-page-head">
+            <p className="eyebrow">Trusted starting points</p>
+            <h2 id="sources-heading">Check the current official route.</h2>
+          </div>
+          <div className="resource-grid">
+            {officialSources.map((resource, index) => (
+              <article className="resource-card" key={resource.title}>
+                <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
+                <p className="eyebrow">{resource.source}</p>
+                <h3>{resource.title}</h3>
+                <p>{resource.detail}</p>
+                <a href={resource.href} target="_blank" rel="noreferrer">Open resource</a>
+              </article>
+            ))}
+          </div>
         </section>
       </div>
     </main>
