@@ -5,11 +5,34 @@ service cloud.firestore {
       return request.auth != null && request.auth.token.email_verified == true;
     }
 
-    function isCurrentMember() {
+    function isGrandfatheredMember() {
       return signedIn() && request.auth.token.email in [
         'victoriaolok@gmail.com',
         'wachaexperience@gmail.com'
       ];
+    }
+
+    function entitlementPath() {
+      return /databases/$(database)/documents/memberEntitlements/$(request.auth.uid);
+    }
+
+    function hasActiveEntitlement() {
+      return signedIn()
+        && exists(entitlementPath())
+        && (
+          get(entitlementPath()).data.status == 'active' ||
+          (
+            get(entitlementPath()).data.status == 'trial' &&
+            (
+              !('renewalAt' in get(entitlementPath()).data) ||
+              get(entitlementPath()).data.renewalAt > request.time
+            )
+          )
+        );
+    }
+
+    function isCurrentMember() {
+      return isGrandfatheredMember() || hasActiveEntitlement();
     }
 
     function isPublisher() {
@@ -21,6 +44,14 @@ service cloud.firestore {
 
     function isModerator() {
       return isPublisher();
+    }
+
+    match /memberEntitlements/{uid} {
+      allow get: if signedIn() && (request.auth.uid == uid || isPublisher());
+      allow list: if isPublisher();
+      allow create, update, delete: if isPublisher()
+        && request.resource.data.status in ['active', 'trial', 'cancelled', 'expired']
+        && request.resource.data.role in ['member', 'publisher', 'moderator', 'admin'];
     }
 
     match /memberPrompts/{promptId} {
