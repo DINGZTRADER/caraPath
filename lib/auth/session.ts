@@ -4,35 +4,39 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import { verifyFirebaseIdToken, type FirebaseTokenPayload } from "../firebase/verify-token";
+import { entitlementAllowsAccess, getMemberEntitlement, type MemberEntitlement } from "./entitlements";
 
 export const SESSION_COOKIE_NAME = "the_clara_path_session";
 export const SESSION_DURATION_SECONDS = 55 * 60;
 
-const BUILT_IN_MEMBER_EMAILS = [
+const GRANDFATHERED_MEMBER_EMAILS = new Set([
   "wachaexperience@gmail.com",
   "victoriaolok@gmail.com"
-];
+]);
 
-function allowedEmails() {
-  const configured = (process.env.FIREBASE_MEMBER_EMAILS ?? "")
-    .split(",")
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
+export type MemberSession = FirebaseTokenPayload & {
+  entitlement: MemberEntitlement | null;
+  accessSource: "entitlement" | "grandfathered";
+};
 
-  return new Set([...BUILT_IN_MEMBER_EMAILS, ...configured]);
-}
-
-export function isAllowedMember(email: string | undefined) {
-  return Boolean(email && allowedEmails().has(email.toLowerCase()));
-}
-
-export const getMemberSession = cache(async (): Promise<FirebaseTokenPayload | null> => {
+export const getMemberSession = cache(async (): Promise<MemberSession | null> => {
   const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
 
   try {
     const session = await verifyFirebaseIdToken(token);
-    return session.email_verified && isAllowedMember(session.email) ? session : null;
+    if (!session.email_verified || !session.email) return null;
+
+    const entitlement = await getMemberEntitlement(session.sub, token).catch(() => null);
+    if (entitlementAllowsAccess(entitlement)) {
+      return { ...session, entitlement, accessSource: "entitlement" };
+    }
+
+    if (GRANDFATHERED_MEMBER_EMAILS.has(session.email.toLowerCase())) {
+      return { ...session, entitlement, accessSource: "grandfathered" };
+    }
+
+    return null;
   } catch {
     return null;
   }
