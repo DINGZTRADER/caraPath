@@ -90,6 +90,11 @@ service cloud.firestore {
         && request.resource.data.body.size() > 0
         && request.resource.data.body.size() <= 2200
         && request.resource.data.category in [
+          '📌 Announcements & Introductions',
+          '⚖️ Care Act & CHC Disputes',
+          '💰 Benefits & Grants',
+          '🏠 Direct Payments & Home Support',
+          '🤝 General Carer Support',
           'Practical question',
           'Local knowledge',
           'Small win',
