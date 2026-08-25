@@ -33,7 +33,7 @@ export function PublicHeader() {
         </div>
 
         <details className={styles.mobileMenu}>
-          <summary aria-label="Open navigation menu">☰</summary>
+          <summary aria-label="Open main navigation">☰</summary>
           <div className={styles.mobileLinks}>
             {links.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
             <a className={styles.memberLink} href="https://members.theclarapath.org">Member Area</a>
