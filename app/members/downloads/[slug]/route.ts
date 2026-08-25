@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getMemberSession } from "../../../../lib/auth/session";
 import { generateMemberPdf, isMemberPdfSlug } from "../../../../lib/member-pdfs";
+import { generateUkCareAssessmentGuide } from "../../../../lib/uk-care-assessment-guide";
 
 export const runtime = "nodejs";
 
@@ -18,7 +19,10 @@ export async function GET(
     return NextResponse.json({ error: "Download not found." }, { status: 404 });
   }
 
-  const file = await generateMemberPdf(slug);
+  const file = slug === "care-assessment-preparation-guide"
+    ? await generateUkCareAssessmentGuide()
+    : await generateMemberPdf(slug);
+
   if (!file) {
     return NextResponse.json({ error: "Download not found." }, { status: 404 });
   }
