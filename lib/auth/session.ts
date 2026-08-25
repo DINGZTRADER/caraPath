@@ -10,7 +10,7 @@ export const SESSION_DURATION_SECONDS = 55 * 60;
 
 const BUILT_IN_MEMBER_EMAILS = [
   "wachaexperience@gmail.com",
-  "victoria.olok@gmail.com"
+  "victoriaolok@gmail.com"
 ];
 
 function allowedEmails() {
