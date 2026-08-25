@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import styles from "../public-resources.module.css";
+import { AuthorityDirectory } from "./authority-directory";
 
 export const metadata: Metadata = {
-  title: "Find Your Local Authority in England | The Clara Path",
-  description: "Official starting points for finding the English Local Authority responsible for adult social care and carer support in your area."
+  title: "All Local Authorities in England | The Clara Path",
+  description: "Search all 317 councils and local authorities in England, with official GOV.UK routes for confirming the council responsible for adult social care and carer support."
 };
 
 export default function LocalAuthoritiesPage() {
@@ -23,8 +24,8 @@ export default function LocalAuthoritiesPage() {
       <section className={styles.hero}>
         <div className={styles.container}>
           <p className={styles.eyebrow}>Carer navigation</p>
-          <h1>Find your Local Authority in England</h1>
-          <p className={styles.lede}>Carer support, adult social-care assessments and many local services are organised through councils. Start with the official government lookup so you reach the authority responsible for your postcode.</p>
+          <h1>Local Authorities in England</h1>
+          <p className={styles.lede}>Search every current English council and local authority in one place, then use the official postcode checker to confirm which authority is responsible for your address and adult social-care services.</p>
         </div>
       </section>
 
@@ -32,39 +33,36 @@ export default function LocalAuthoritiesPage() {
         <div className={styles.container}>
           <div className={styles.grid}>
             <article className={styles.card}>
-              <div className={styles.stat}><span className={styles.number}>01</span><div><h2>Use the official postcode lookup</h2><p>Enter your postcode on GOV.UK to identify your council. This is the safest way to avoid outdated council names or links when local-government boundaries change.</p></div></div>
-              <a className={styles.button} href="https://www.gov.uk/find-local-council" target="_blank" rel="noreferrer">Find your council on GOV.UK ↗</a>
+              <div className={styles.stat}><span className={styles.number}>01</span><div><h2>Not sure which council you need?</h2><p>Enter your postcode on GOV.UK. This is the most reliable way to identify the council responsible for your address, especially where county and district councils overlap.</p></div></div>
+              <a className={styles.button} href="https://www.gov.uk/find-local-council" target="_blank" rel="noreferrer">Find your council by postcode ↗</a>
             </article>
-
             <article className={styles.card}>
-              <div className={styles.stat}><span className={styles.number}>02</span><div><h2>Check which council handles adult social care</h2><p>In two-tier areas, the county council usually handles adult social care. District, borough or city councils may handle other local services. In unitary areas, one council normally provides both.</p></div></div>
+              <div className={styles.stat}><span className={styles.number}>02</span><div><h2>Adult social care in two-tier areas</h2><p>Where both a county and district council exist, the county council normally provides adult social care. Unitary authorities, metropolitan districts and London boroughs generally provide the full range of council services.</p></div></div>
               <a className={`${styles.button} ${styles.secondary}`} href="https://www.gov.uk/understand-how-your-council-works" target="_blank" rel="noreferrer">Understand council types ↗</a>
             </article>
           </div>
-
-          <div className={styles.notice}><strong>Why we use the official lookup:</strong> England’s local-government structure is changing in several areas. The official postcode route is more reliable than maintaining a static list of hundreds of council URLs that can become obsolete.</div>
+          <div className={styles.notice}><strong>Directory source:</strong> The authority names and categories below are reconciled against current GOV.UK local-authority election-cycle guidance. Because local-government reorganisation can change council structures, always use the official postcode checker for a case-specific decision.</div>
         </div>
       </section>
 
       <section className={styles.section}>
         <div className={styles.container}>
-          <p className={styles.eyebrow}>England-wide council information</p>
+          <AuthorityDirectory />
+        </div>
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.container}>
           <div className={styles.grid}>
-            <article className={styles.card}>
-              <h2>Full list of councils in England</h2>
-              <p>The Government publishes the current list of English councils by type, including county councils, district councils, unitary authorities, metropolitan districts and London boroughs.</p>
-              <a className={styles.button} href="https://www.gov.uk/government/publications/list-of-councils-in-england-by-type" target="_blank" rel="noreferrer">View the Government council list ↗</a>
-            </article>
             <article className={styles.card}>
               <h2>Preparing for a carer’s assessment</h2>
               <p>Before speaking to your council, think about the practical and emotional impact of caring, the support you already provide, what is becoming difficult and what would make the caring role more manageable.</p>
-              <ul>
-                <li>Hours and tasks involved in caring</li>
-                <li>Impact on sleep, work, education and relationships</li>
-                <li>Your own physical and emotional wellbeing</li>
-                <li>Breaks, respite and time for yourself</li>
-                <li>Questions about equipment, Direct Payments or support</li>
-              </ul>
+              <ul><li>Hours and tasks involved in caring</li><li>Impact on sleep, work, education and relationships</li><li>Your own physical and emotional wellbeing</li><li>Breaks, respite and time for yourself</li><li>Questions about equipment, Direct Payments or support</li></ul>
+            </article>
+            <article className={styles.card}>
+              <h2>Check the Government source</h2>
+              <p>The Government publishes current information about council structures and election cycles. The Clara Path directory is designed to make that information easier to browse, not to replace the official source.</p>
+              <a className={styles.button} href="https://www.gov.uk/government/publications/election-timetable-in-england/election-timetable-in-england" target="_blank" rel="noreferrer">View current GOV.UK authority guidance ↗</a>
             </article>
           </div>
           <div className={styles.notice}>A carer’s assessment does not automatically guarantee a particular service, payment or outcome. Decisions are made by the relevant Local Authority according to current law, eligibility criteria and individual circumstances.</div>
