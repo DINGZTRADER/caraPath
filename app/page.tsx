@@ -19,14 +19,14 @@ export default async function Home() {
               <p className="lede">Practical preparation, calm navigation and trusted starting points for family carers facing complex UK health and social-care systems.</p>
               <div className="hero-actions">
                 <a className="button button-primary" href="#resources">Explore carer resources</a>
-                <a className="button button-secondary" href="/local-authorities">Find your Local Authority</a>
+                <a className="button button-secondary" href="/services">View paid support</a>
               </div>
             </div>
             <aside className="auth-card" aria-label="A calmer way forward">
               <p className="eyebrow">A calmer way forward</p>
               <h2 style={{ fontSize: "1.8rem" }}>Start with the next useful step.</h2>
-              <p>We help you organise the information, questions and routes that matter, then point you towards the appropriate official or professional service.</p>
-              <div className="notice">The Clara Path provides general preparation and navigation support. Funding, care, treatment and legal decisions remain with the appropriate authority or qualified professional.</div>
+              <p>We help you organise information, evidence, questions and care-system routes, then support you to engage with the appropriate statutory or professional service.</p>
+              <div className="notice"><strong>Non-care service:</strong> The Clara Path does not provide medical diagnosis, clinical treatment decisions or regulated personal care. Funding, care, benefit and statutory decisions remain with the relevant authority or qualified professional.</div>
             </aside>
           </div>
         </section>
@@ -34,7 +34,7 @@ export default async function Home() {
         <div className="trust-band">
           <div className="container trust-grid">
             <p>Privacy-conscious support for carers</p>
-            <p>Clear community standards</p>
+            <p>Clear professional boundaries</p>
             <p>Trusted links to official sources</p>
           </div>
         </div>
@@ -56,13 +56,13 @@ export default async function Home() {
         <section className="quick-start-section" id="how-we-help">
           <div className="container">
             <div className="section-intro">
-              <div><p className="eyebrow">How we help</p><h2>Practical support for the moments that matter.</h2></div>
-              <p>Understand the route, prepare the right questions and use trusted official information before approaching councils, NHS teams, charities or regulated providers.</p>
+              <div><p className="eyebrow">How we help</p><h2>Choose the level of support you need.</h2></div>
+              <p>Start with free information, join Carer’s Circle for ongoing tools and community support, or use a paid navigation and advocacy service when your situation needs more hands-on help.</p>
             </div>
             <div className="steps">
-              <article className="step"><span className="step-number">01</span><h3>Understand the route</h3><p>Plain-English explanations of common health and social-care pathways and terminology.</p></article>
-              <article className="step"><span className="step-number">02</span><h3>Prepare with confidence</h3><p>Organise facts, documents and questions for assessments, applications, reviews and challenges.</p></article>
-              <article className="step"><span className="step-number">03</span><h3>Use the right source</h3><p>Check current eligibility, processes and contact routes with the appropriate official organisation.</p></article>
+              <article className="step"><span className="step-number">01</span><h3>Free guidance</h3><p>Use public Local Authority, care-term and assessment-preparation resources before approaching councils, NHS teams or other official services.</p></article>
+              <article className="step"><span className="step-number">02</span><h3>Carer’s Circle — £15/month</h3><p>Protected fillable downloads, private community discussions, official-source shortcuts, practical prompts and an expanding member library.</p></article>
+              <article className="step"><span className="step-number">03</span><h3>Paid navigation & advocacy</h3><p>Structured roadmaps, CHC preparation, appeals support, meeting advocacy and non-regulated care coordination for families needing individual help.</p><a href="/services">View paid services</a></article>
             </div>
           </div>
         </section>
@@ -79,7 +79,7 @@ export default async function Home() {
                 <span className="step-number">01</span>
                 <p className="eyebrow">England-wide directory</p>
                 <h3>Find Your Local Authority</h3>
-                <p>Search all 317 councils and local authorities in England, filter by council type, and use the GOV.UK postcode checker to confirm the authority responsible for your address.</p>
+                <p>Search all 317 councils and local authorities in England and identify the authority responsible for adult social care in your area.</p>
                 <a href="/local-authorities">Search Local Authorities</a>
               </article>
               <article className="resource-card">
@@ -93,14 +93,14 @@ export default async function Home() {
                 <span className="step-number">03</span>
                 <p className="eyebrow">Free fillable starter</p>
                 <h3>Care Assessment Starter Guide</h3>
-                <p>Enter your email to unlock sample Care Act outcome prompts and a fillable one-day care evidence log before an assessment meeting.</p>
+                <p>Unlock sample Care Act outcome prompts and a fillable one-day care evidence log before an assessment meeting.</p>
                 <a href="/free-care-assessment-guide">Get the free starter guide</a>
               </article>
             </div>
 
             <div className="notice" style={{ marginTop: "28px" }}>
-              Premium members can access the complete UK Care Assessment Prep Guide, two-week fillable logbook and the protected Resource Vault with benefit, CHC, EHCP, DFG and other care-related preparation tools.
-              {' '}<a href="https://members.theclarapath.org/members/resources" style={{ fontWeight: 800, color: "var(--blue)" }}>Open the Member Resource Vault →</a>
+              <strong>Carer’s Circle membership: £15/month.</strong> Members receive the protected Resource Vault, private community, practical prompts, official-source library and expanding member tools.
+              {' '}<a href="https://members.theclarapath.org/members/resources" style={{ fontWeight: 800, color: "var(--blue)" }}>Explore the Member Resource Vault →</a>
             </div>
           </div>
         </section>
@@ -126,7 +126,7 @@ export default async function Home() {
             <ol className="rule-list">
               <li className="rule"><span className="rule-number">01</span><div><strong>Zero judgement. Maximum empathy.</strong><p>Questions and experiences deserve care and respect.</p></div></li>
               <li className="rule"><span className="rule-number">02</span><div><strong>Protect personal privacy.</strong><p>Do not post names, addresses, reference numbers or unredacted official documents.</p></div></li>
-              <li className="rule"><span className="rule-number">03</span><div><strong>Information, not formal advice.</strong><p>Clinical, legal and benefits decisions belong with the appropriate qualified professional or authority.</p></div></li>
+              <li className="rule"><span className="rule-number">03</span><div><strong>Information, not formal clinical or legal advice.</strong><p>Clinical, legal and statutory decisions belong with the appropriate qualified professional or authority.</p></div></li>
               <li className="rule"><span className="rule-number">04</span><div><strong>No unsolicited selling.</strong><p>The Circle is not a place for pitching private services to members.</p></div></li>
             </ol>
           </div>
@@ -134,10 +134,13 @@ export default async function Home() {
 
         <section className="cta">
           <div className="container">
-            <p className="eyebrow">Begin with one clear step</p>
-            <h2>Better preparation can change the next conversation.</h2>
-            <p>Use the public resources above or enter the protected Carer&apos;s Circle Member Area for fillable guides, community prompts, events and trusted recommendations.</p>
-            <a className="button button-primary" href="https://members.theclarapath.org">Open Member Area</a>
+            <p className="eyebrow">Need more individual support?</p>
+            <h2>From preparation to hands-on navigation.</h2>
+            <p>Use Carer’s Circle for ongoing tools and community support, or explore paid services for structured roadmaps, CHC preparation, appeals support and care-system advocacy.</p>
+            <div className="hero-actions" style={{ justifyContent: "center" }}>
+              <a className="button button-primary" href="https://members.theclarapath.org">Carer’s Circle — £15/month</a>
+              <a className="button button-secondary" href="/services">View paid services</a>
+            </div>
           </div>
         </section>
       </main>
@@ -146,9 +149,9 @@ export default async function Home() {
         <div className="container">
           <div className="footer-grid">
             <div className="footer-brand"><strong>The Clara Path Consultants Ltd</strong><small>Your Guide to Health &amp; Social Support</small></div>
-            <div><a href="/local-authorities">Local Authorities</a> · <a href="/care-terms">Care Terms</a> · <a href="https://members.theclarapath.org">Member Area</a></div>
+            <div><a href="/local-authorities">Local Authorities</a> · <a href="/care-terms">Care Terms</a> · <a href="/services">Paid Services</a> · <a href="https://members.theclarapath.org">Member Area</a></div>
           </div>
-          <p className="footer-note">Information on this website is for general guidance and navigation support only; it is not medical, legal or regulated financial advice.</p>
+          <p className="footer-note">The Clara Path provides administrative support, advocacy, evidence preparation and system navigation. We do not provide medical diagnosis, clinical treatment decisions, regulated personal care, legal representation or regulated financial advice.</p>
         </div>
       </footer>
     </>
