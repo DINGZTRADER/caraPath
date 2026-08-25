@@ -1,9 +1,12 @@
 import { getMemberSession, requireMember } from "../../lib/auth/session";
 import { MemberAccountMenu } from "./member-account-menu";
 
+const PUBLISHER_EMAILS = new Set(["victoriaolok@gmail.com", "wachaexperience@gmail.com"]);
+
 export default async function MembersLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   await requireMember();
   const user = await getMemberSession();
+  const isPublisher = Boolean(user?.email && PUBLISHER_EMAILS.has(user.email.toLowerCase()));
 
   return (
     <div className="member-shell">
@@ -24,6 +27,7 @@ export default async function MembersLayout({ children }: Readonly<{ children: R
             <a href="/members/recommendations">Recommendations</a>
             <a href="/members/calendar">Calendar</a>
             <a href="/members/events">Events</a>
+            {isPublisher ? <a href="/members/admin">Publisher</a> : null}
             <MemberAccountMenu email={user?.email} name={user?.name} />
           </div>
         </nav>
