@@ -49,9 +49,12 @@ service cloud.firestore {
     match /memberEntitlements/{uid} {
       allow get: if signedIn() && (request.auth.uid == uid || isPublisher());
       allow list: if isPublisher();
-      allow create, update, delete: if isPublisher()
+
+      allow create, update: if isPublisher()
         && request.resource.data.status in ['active', 'trial', 'cancelled', 'expired']
         && request.resource.data.role in ['member', 'publisher', 'moderator', 'admin'];
+
+      allow delete: if isPublisher();
     }
 
     match /memberPrompts/{promptId} {
