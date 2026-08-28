@@ -4,6 +4,7 @@ import { getVercelOidcToken } from "@vercel/oidc";
 import { ExternalAccountClient } from "google-auth-library";
 
 const FIREBASE_PROJECT_ID = "carapath-73955";
+const GCP_PROJECT_NUMBER = "630001259769";
 const VALID_ROLES = new Set(["member", "publisher", "moderator", "admin"]);
 
 type MembershipRole = "member" | "publisher" | "moderator" | "admin";
@@ -23,11 +24,10 @@ function requiredEnv(name: string) {
 }
 
 async function googleAccessToken() {
-  const projectNumber = requiredEnv("GCP_PROJECT_NUMBER");
   const poolId = requiredEnv("GCP_WORKLOAD_IDENTITY_POOL_ID");
   const providerId = requiredEnv("GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID");
   const serviceAccountEmail = requiredEnv("GCP_SERVICE_ACCOUNT_EMAIL");
-  const audience = `https://iam.googleapis.com/projects/${projectNumber}/locations/global/workloadIdentityPools/${poolId}/providers/${providerId}`;
+  const audience = `https://iam.googleapis.com/projects/${GCP_PROJECT_NUMBER}/locations/global/workloadIdentityPools/${poolId}/providers/${providerId}`;
 
   const authClient = ExternalAccountClient.fromJSON({
     type: "external_account",
