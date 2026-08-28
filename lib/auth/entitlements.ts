@@ -9,6 +9,8 @@ export type MemberEntitlement = {
   status: MembershipStatus;
   role: MembershipRole;
   renewalAt?: Date | null;
+  stripeCustomerId?: string | null;
+  stripeSubscriptionId?: string | null;
 };
 
 function stringValue(field: unknown) {
@@ -43,7 +45,9 @@ export async function getMemberEntitlement(uid: string, idToken: string): Promis
   return {
     status,
     role,
-    renewalAt: timestampValue(payload.fields?.renewalAt)
+    renewalAt: timestampValue(payload.fields?.renewalAt),
+    stripeCustomerId: stringValue(payload.fields?.stripeCustomerId) ?? null,
+    stripeSubscriptionId: stringValue(payload.fields?.stripeSubscriptionId) ?? null
   };
 }
 
