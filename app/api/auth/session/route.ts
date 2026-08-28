@@ -33,13 +33,12 @@ export async function POST(request: Request) {
   try {
     const decoded = await verifyFirebaseIdToken(idToken);
     const signedInRecently = typeof decoded.auth_time === "number" && Date.now() / 1000 - decoded.auth_time < 5 * 60;
-    const memberAccess = signedInRecently ? await resolveMemberAccess(decoded, idToken) : null;
-
-    if (!memberAccess) {
-      return NextResponse.json({ error: "This account does not currently have Member Area access." }, { status: 403 });
+    if (!signedInRecently || !decoded.email_verified || !decoded.email) {
+      return NextResponse.json({ error: "Please sign in again to continue securely." }, { status: 401 });
     }
 
-    const response = NextResponse.json({ ok: true });
+    const memberAccess = await resolveMemberAccess(decoded, idToken);
+    const response = NextResponse.json({ ok: true, hasMemberAccess: Boolean(memberAccess) });
     response.cookies.set(SESSION_COOKIE_NAME, idToken, cookieOptions());
     return response;
   } catch {
