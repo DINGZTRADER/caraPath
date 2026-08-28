@@ -11,8 +11,9 @@ import {
 import { type FormEvent, useState } from "react";
 import { getFirebaseClientAuth, hasFirebaseClientConfig } from "../../../lib/firebase/client";
 
-function memberDestination() {
+function requestedDestination() {
   const destination = new URLSearchParams(window.location.search).get("redirect_url");
+  if (destination === "/join") return "/join";
   return destination?.startsWith("/members") ? destination : "/members";
 }
 
@@ -40,13 +41,15 @@ export function FirebaseSignIn() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ idToken })
     });
-    const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+    const payload = (await response.json().catch(() => null)) as { error?: string; hasMemberAccess?: boolean } | null;
     if (!response.ok) throw new Error(payload?.error ?? "We could not complete your sign-in.");
+    return Boolean(payload?.hasMemberAccess);
   }
 
   async function finishSignIn(user: User) {
-    await createServerSession(user);
-    window.location.assign(memberDestination());
+    const hasMemberAccess = await createServerSession(user);
+    const requested = requestedDestination();
+    window.location.assign(hasMemberAccess ? requested : "/join");
   }
 
   async function signInWithGoogle() {
@@ -103,7 +106,7 @@ export function FirebaseSignIn() {
         <button className="auth-submit" disabled={isBusy} type="submit">Sign in</button>
       </form>
       {status ? <p className="auth-status">{status}</p> : null}
-      <p className="auth-help">Membership is by invitation. Use the email address registered with The Clara Path.</p>
+      <p className="auth-help">Existing members will enter the Member Area. New verified users will be taken to the secure £15/month Carer’s Circle signup page.</p>
     </div>
   );
 }
