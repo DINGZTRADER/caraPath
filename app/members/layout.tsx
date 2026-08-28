@@ -1,5 +1,6 @@
 import { getMemberSession, requireMember } from "../../lib/auth/session";
 import { MemberAccountMenu } from "./member-account-menu";
+import "./member-nav.css";
 
 const PUBLISHER_EMAILS = new Set(["victoriaolok@gmail.com", "wachaexperience@gmail.com"]);
 
