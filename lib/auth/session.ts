@@ -14,6 +14,8 @@ const GRANDFATHERED_MEMBER_EMAILS = new Set([
   "victoriaolok@gmail.com"
 ]);
 
+export type SignedInSession = FirebaseTokenPayload & { idToken: string };
+
 export type MemberSession = FirebaseTokenPayload & {
   entitlement: MemberEntitlement | null;
   accessSource: "entitlement" | "grandfathered";
@@ -34,17 +36,31 @@ export async function resolveMemberAccess(session: FirebaseTokenPayload, idToken
   return null;
 }
 
-export const getMemberSession = cache(async (): Promise<MemberSession | null> => {
-  const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
-  if (!token) return null;
+export const getSignedInSession = cache(async (): Promise<SignedInSession | null> => {
+  const idToken = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
+  if (!idToken) return null;
 
   try {
-    const session = await verifyFirebaseIdToken(token);
-    return await resolveMemberAccess(session, token);
+    const session = await verifyFirebaseIdToken(idToken);
+    if (!session.email_verified || !session.email) return null;
+    return { ...session, idToken };
   } catch {
     return null;
   }
 });
+
+export const getMemberSession = cache(async (): Promise<MemberSession | null> => {
+  const signedIn = await getSignedInSession();
+  if (!signedIn) return null;
+  const { idToken, ...session } = signedIn;
+  return resolveMemberAccess(session, idToken);
+});
+
+export async function requireSignedIn() {
+  const session = await getSignedInSession();
+  if (!session) redirect("/sign-in?redirect_url=/join");
+  return session;
+}
 
 export async function requireMember() {
   const session = await getMemberSession();
