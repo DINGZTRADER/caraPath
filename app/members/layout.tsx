@@ -21,6 +21,7 @@ export default async function MembersLayout({ children }: Readonly<{ children: R
             <span className="brand-copy"><strong>The Clara Path</strong><span>Carer’s Circle member area</span></span>
           </a>
           <div className="member-actions">
+            <a href="https://www.theclarapath.org/">← Main site</a>
             <a href="/members/resources">Resource Vault</a>
             <a href="/members/prompts">Prompts</a>
             <a href="/members/community">Community</a>
