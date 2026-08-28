@@ -4,10 +4,13 @@ import { getVercelOidcToken } from "@vercel/oidc";
 import { ExternalAccountClient } from "google-auth-library";
 
 const FIREBASE_PROJECT_ID = "carapath-73955";
+const VALID_ROLES = new Set(["member", "publisher", "moderator", "admin"]);
+
+type MembershipRole = "member" | "publisher" | "moderator" | "admin";
 
 type EntitlementWrite = {
   status: "active" | "trial" | "cancelled" | "expired";
-  role?: "member" | "publisher" | "moderator" | "admin";
+  role?: MembershipRole;
   renewalAt?: Date | null;
   stripeCustomerId?: string | null;
   stripeSubscriptionId?: string | null;
@@ -44,10 +47,28 @@ async function googleAccessToken() {
   return token;
 }
 
-function firestoreFields(input: EntitlementWrite) {
+function stringValue(field: unknown) {
+  if (!field || typeof field !== "object") return undefined;
+  const value = (field as { stringValue?: unknown }).stringValue;
+  return typeof value === "string" ? value : undefined;
+}
+
+async function existingRole(url: string, token: string): Promise<MembershipRole | null> {
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store"
+  });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`Firestore entitlement read failed with ${response.status}.`);
+  const payload = (await response.json()) as { fields?: Record<string, unknown> };
+  const role = stringValue(payload.fields?.role);
+  return role && VALID_ROLES.has(role) ? (role as MembershipRole) : null;
+}
+
+function firestoreFields(input: EntitlementWrite, role: MembershipRole) {
   const fields: Record<string, unknown> = {
     status: { stringValue: input.status },
-    role: { stringValue: input.role ?? "member" },
+    role: { stringValue: role },
     source: { stringValue: "stripe" },
     updatedAt: { timestampValue: new Date().toISOString() }
   };
@@ -60,13 +81,15 @@ function firestoreFields(input: EntitlementWrite) {
 export async function writeMemberEntitlement(uid: string, input: EntitlementWrite) {
   const token = await googleAccessToken();
   const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/memberEntitlements/${encodeURIComponent(uid)}`;
+  const role = input.role ?? (await existingRole(url, token)) ?? "member";
+
   const response = await fetch(url, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ fields: firestoreFields(input) }),
+    body: JSON.stringify({ fields: firestoreFields(input, role) }),
     cache: "no-store"
   });
 
