@@ -1,1 +1,2 @@
 Trigger production deployment after Vercel quota reset.
+Redeploy full GitHub main to restore all production routes, including /join.
