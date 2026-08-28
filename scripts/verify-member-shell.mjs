@@ -3,6 +3,7 @@ import { access, readFile } from "node:fs/promises";
 import { constants } from "node:fs";
 
 const layout = await readFile(new URL("../app/members/layout.tsx", import.meta.url), "utf8");
+const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
 assert.match(
   layout,
@@ -14,6 +15,12 @@ assert.match(
   layout,
   /href="\/members"/,
   "Member navigation must retain a Member Area home link."
+);
+
+assert.doesNotMatch(
+  styles,
+  /\.member-actions a \{ display: none; \}/,
+  "Member navigation links must remain accessible in narrow browser panes."
 );
 
 let legacyMemberAppExists = true;
