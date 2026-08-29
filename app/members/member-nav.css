@@ -1,4 +1,40 @@
+.member-return-bar {
+  border-bottom: 1px solid #cdd9ed;
+  color: #ffffff;
+  background: #102b6c;
+}
+
+.member-return-bar .container {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+}
+
+.member-main-site-link {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 8px;
+  border-radius: 7px;
+  padding: 4px 8px;
+  color: #ffffff;
+  font-size: .9rem;
+  font-weight: 850;
+}
+
+.member-main-site-link:hover {
+  background: rgba(255, 255, 255, .12);
+}
+
+.member-main-site-link:focus-visible {
+  outline-color: #ffffff;
+}
+
 @media (max-width: 650px) {
+  .member-return-bar .container {
+    min-height: 46px;
+  }
+
   .member-nav {
     flex-wrap: wrap;
     padding: 10px 0 12px;
