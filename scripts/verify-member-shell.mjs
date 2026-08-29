@@ -3,11 +3,18 @@ import { access, readFile } from "node:fs/promises";
 import { constants } from "node:fs";
 
 const layout = await readFile(new URL("../app/members/layout.tsx", import.meta.url), "utf8");
+const signInPage = await readFile(new URL("../app/sign-in/[[...sign-in]]/page.tsx", import.meta.url), "utf8");
 
 assert.match(
   layout,
   /href="https:\/\/www\.theclarapath\.org\/"/,
   "Member navigation must include a direct link back to the main Clara Path site."
+);
+
+assert.match(
+  signInPage,
+  /href="https:\/\/www\.theclarapath\.org\/"/,
+  "Member sign-in navigation must return to the public Clara Path site instead of looping on the member host."
 );
 
 assert.match(
