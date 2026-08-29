@@ -11,6 +11,13 @@ export default async function MembersLayout({ children }: Readonly<{ children: R
 
   return (
     <div className="member-shell">
+      <div className="member-return-bar">
+        <div className="container">
+          <a className="member-main-site-link" href="https://www.theclarapath.org/">
+            <span aria-hidden="true">←</span> Back to main website
+          </a>
+        </div>
+      </div>
       <header className="member-header">
         <nav className="container member-nav" aria-label="Member navigation">
           <a className="brand" href="/members" aria-label="The Clara Path Member Area home">
@@ -22,7 +29,6 @@ export default async function MembersLayout({ children }: Readonly<{ children: R
             <span className="brand-copy"><strong>The Clara Path</strong><span>Carer’s Circle member area</span></span>
           </a>
           <div className="member-actions">
-            <a href="https://www.theclarapath.org/">← Main site</a>
             <a href="/members/resources">Resource Vault</a>
             <a href="/members/prompts">Prompts</a>
             <a href="/members/community">Community</a>
