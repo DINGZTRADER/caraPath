@@ -7,8 +7,14 @@ const signInPage = await readFile(new URL("../app/sign-in/[[...sign-in]]/page.ts
 
 assert.match(
   layout,
-  /href="https:\/\/www\.theclarapath\.org\/"/,
-  "Member navigation must include a direct link back to the main Clara Path site."
+  /className="member-main-site-link" href="https:\/\/www\.theclarapath\.org\/"/,
+  "Member navigation must include a dedicated link back to the main Clara Path site."
+);
+
+assert.match(
+  layout,
+  /className="member-return-bar"/,
+  "The main-site return control must live in its own always-visible bar."
 );
 
 assert.match(
@@ -35,6 +41,12 @@ try {
 } catch {
   memberNavStyles = "";
 }
+
+assert.match(
+  memberNavStyles,
+  /\.member-main-site-link\s*\{[^}]*display:\s*inline-flex;[^}]*\}/s,
+  "The dedicated main-site return link must always be visible."
+);
 
 assert.match(
   memberNavStyles,
