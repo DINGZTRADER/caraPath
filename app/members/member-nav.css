@@ -1,0 +1,20 @@
+@media (max-width: 650px) {
+  .member-nav {
+    flex-wrap: wrap;
+    padding: 10px 0 12px;
+  }
+
+  .member-actions {
+    width: 100%;
+    overflow-x: auto;
+    gap: 12px;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+
+  .member-actions a {
+    display: inline-flex;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}

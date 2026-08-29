@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "test": "node scripts/verify-member-shell.mjs",
+    "build": "npm test && next build",
     "start": "next start",
     "typecheck": "tsc --noEmit"
   },
