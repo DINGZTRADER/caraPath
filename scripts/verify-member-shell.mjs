@@ -35,6 +35,28 @@ assert.match(
   "Member layout must load its narrow-pane navigation overrides."
 );
 
+const approvedLogoPath = "M9 33.5C15.5 33.5 18.7 28.5 23.3 21.2C27 15.2 30.7 11.4 39 11.4";
+assert.equal(
+  layout.includes(approvedLogoPath),
+  true,
+  "The Member Area header must use approved Logo 3."
+);
+assert.equal(
+  signInPage.includes(approvedLogoPath),
+  true,
+  "The Member Area sign-in screen must use approved Logo 3."
+);
+assert.equal(
+  layout.includes("M33.2 8.4C24.5 6.2"),
+  false,
+  "The previous circular member logo must not return."
+);
+assert.equal(
+  signInPage.includes("M33.2 8.4C24.5 6.2"),
+  false,
+  "The previous circular sign-in logo must not return."
+);
+
 let memberNavStyles = "";
 try {
   memberNavStyles = await readFile(new URL("../app/members/member-nav.css", import.meta.url), "utf8");
