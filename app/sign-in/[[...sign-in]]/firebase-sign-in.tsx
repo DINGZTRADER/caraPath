@@ -106,7 +106,7 @@ export function FirebaseSignIn() {
         <button className="auth-submit" disabled={isBusy} type="submit">Sign in</button>
       </form>
       {status ? <p className="auth-status">{status}</p> : null}
-      <p className="auth-help">Existing members will enter the Member Area. New verified users will be taken to the secure £15/month Carer’s Circle signup page.</p>
+      <p className="auth-help">Existing members will enter the Member Area. New membership sales will open after the final price, trial and cancellation terms are approved and published.</p>
     </div>
   );
 }

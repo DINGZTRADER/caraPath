@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getMemberEntitlement } from "../../../../lib/auth/entitlements";
 import { getMemberSession, getSignedInSession } from "../../../../lib/auth/session";
+import { proposedCommercialSettings } from "../../../../lib/commercial-readiness";
 import { CARERS_CIRCLE_PRICE_ID, stripePostForm, type StripeCheckoutSession } from "../../../../lib/stripe/server";
 
 export const runtime = "nodejs";
@@ -11,6 +12,13 @@ function memberOrigin(request: Request) {
 }
 
 export async function POST(request: Request) {
+  if (!proposedCommercialSettings.membershipSalesEnabled) {
+    return NextResponse.json(
+      { error: "Carer’s Circle membership terms are being finalised. Checkout is not currently available." },
+      { status: 503 },
+    );
+  }
+
   const signedIn = await getSignedInSession();
   if (!signedIn) return NextResponse.redirect(new URL("/sign-in?redirect_url=/join", request.url), 303);
 

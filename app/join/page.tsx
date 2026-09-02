@@ -18,7 +18,7 @@ export default async function JoinPage({ searchParams }: Props) {
       <div className="container" style={{ maxWidth: 840 }}>
         <section className="member-hero">
           <p className="eyebrow">Carer’s Circle Membership</p>
-          <h1>{existingMember ? "Your membership is active." : "Join Carer’s Circle for £15/month."}</h1>
+          <h1>{existingMember ? "Your membership is active." : "Carer’s Circle membership is being finalised."}</h1>
           <p>Protected resources, practical preparation tools, private community discussions, official-source shortcuts, member prompts and an expanding Resource Vault for family carers navigating UK health and social care.</p>
         </section>
 
@@ -27,9 +27,9 @@ export default async function JoinPage({ searchParams }: Props) {
 
         <section className="resource-grid" aria-label="Membership details" style={{ marginTop: "2rem" }}>
           <article className="resource-card">
-            <p className="eyebrow">Monthly membership</p>
-            <h2>£15 per month</h2>
-            <p>Charged securely by Stripe. No free trial. You can manage your payment method and cancellation through Stripe’s secure Customer Portal once your membership is active.</p>
+            <p className="eyebrow">Membership terms</p>
+            <h2>Pricing and trial details are pending approval</h2>
+            <p>The final price, proposed seven-day trial, billing date, cancellation process and refund terms will be published together before new memberships open.</p>
           </article>
           <article className="resource-card">
             <p className="eyebrow">Included</p>
@@ -45,15 +45,11 @@ export default async function JoinPage({ searchParams }: Props) {
         <div className="hero-actions" style={{ marginTop: "2rem" }}>
           {existingMember ? (
             <a className="button button-primary" href="/members">Open Member Area</a>
-          ) : (
-            <form action="/api/billing/checkout" method="post">
-              <button className="button button-primary" type="submit">Continue to secure £15/month checkout</button>
-            </form>
-          )}
+          ) : <span className="notice">New membership checkout is not currently available.</span>}
           <a className="button button-secondary" href="https://www.theclarapath.org">Back to The Clara Path</a>
         </div>
 
-        <p className="footer-note" style={{ marginTop: "2rem" }}>Signed in as {signedIn.email}. Membership access is activated only after Stripe confirms the subscription.</p>
+        <p className="footer-note" style={{ marginTop: "2rem" }}>Signed in as {signedIn.email}. Existing members retain access; new membership sales will open only after the terms are approved and published.</p>
       </div>
     </main>
   );
