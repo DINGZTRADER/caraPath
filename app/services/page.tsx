@@ -79,7 +79,7 @@ export default function ServicesPage() {
         <section className={styles.hero}>
           <div className={styles.container}>
             <p className={styles.eyebrow}>Paid support</p>
-            <h1>Experienced navigation and practical tools when the system becomes difficult.</h1>
+            <h1>Structured navigation and practical tools when the system becomes difficult.</h1>
             <p className={styles.lede}>The Clara Path combines hands-on administrative support with focused learning products, evidence tools and consultations for families who want more structured help.</p>
             <div className={styles.notice}><strong>Important professional boundary:</strong> The Clara Path does not provide medical diagnosis, clinical treatment decisions, regulated personal care, legal representation or regulated financial advice. Decisions about NHS funding, Local Authority support and state benefits remain with the relevant statutory body.</div>
           </div>

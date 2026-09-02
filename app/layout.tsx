@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     template: "%s | The Clara Path"
   },
   description:
-    "The Clara Path Carer’s Circle offers structured resources and practical preparation for family carers navigating UK health and social care.",
+    "The Clara Path helps individuals, unpaid carers, family members and friends navigate health and social care in England and Wales.",
   robots: {
     index: true,
     follow: true

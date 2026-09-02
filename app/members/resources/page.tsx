@@ -116,14 +116,14 @@ export default function MemberResourcesPage() {
         <header className="member-page-head">
           <p className="eyebrow">The Classroom</p>
           <h1>Resource Vault</h1>
-          <p className="lede">Carer’s Circle membership is £15 per month. The aim is practical value: protected tools, community support, official-source shortcuts and an expanding library that helps you prepare before difficult care-system conversations.</p>
+          <p className="lede">Carer’s Circle is designed to provide practical value through protected tools, community support, official-source shortcuts and an expanding library that helps you prepare before difficult care-system conversations. Final pricing and trial terms will be published only after approval.</p>
         </header>
 
         <div className="notice"><strong>Non-care disclaimer:</strong> These materials are educational and administrative preparation tools. The Clara Path does not provide medical diagnosis, clinical treatment decisions, regulated personal care, legal representation or regulated financial advice, and does not determine or guarantee eligibility or funding. Complete private logs on your own device; do not upload health records or identifying case documents to this site.</div>
 
         <section aria-labelledby="membership-value-heading" style={{ marginTop: "3rem" }}>
           <div className="member-page-head">
-            <p className="eyebrow">Included in £15/month</p>
+            <p className="eyebrow">Included with membership</p>
             <h2 id="membership-value-heading">What Carer’s Circle membership is designed to deliver.</h2>
           </div>
           <div className="resource-grid">

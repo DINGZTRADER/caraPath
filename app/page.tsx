@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { EnquiryForm } from "./enquiry-form";
 import { PublicHeader } from "./public-header";
 
 export default async function Home() {
@@ -14,18 +15,18 @@ export default async function Home() {
         <section className="hero" id="top">
           <div className="container hero-grid">
             <div>
-              <p className="eyebrow">The Clara Path Carer&apos;s Circle</p>
-              <h1>A clearer path through health and social care.</h1>
-              <p className="lede">Practical preparation, calm navigation and trusted starting points for family carers facing complex UK health and social-care systems.</p>
+              <p className="eyebrow">Health and social care navigation</p>
+              <h1>Navigating health and social care shouldn&apos;t feel like a battle.</h1>
+              <p className="lede">The Clara Path helps individuals, unpaid carers, family members and friends across England and Wales understand the system, prepare for important conversations and identify practical next steps.</p>
               <div className="hero-actions">
-                <a className="button button-primary" href="#resources">Explore carer resources</a>
-                <a className="button button-secondary" href="/services">View paid support</a>
+                <a className="button button-primary" href="#enquiry">Get Help Now</a>
+                <a className="button button-secondary" href="#how-we-help">See how we help</a>
               </div>
             </div>
             <aside className="auth-card" aria-label="A calmer way forward">
               <p className="eyebrow">A calmer way forward</p>
               <h2 style={{ fontSize: "1.8rem" }}>Start with the next useful step.</h2>
-              <p>We help you organise information, evidence, questions and care-system routes, then support you to engage with the appropriate statutory or professional service.</p>
+              <p>We help you organise information, understand possible routes and prepare questions, then support you to engage with the appropriate NHS, local-authority or professional service.</p>
               <div className="notice"><strong>Non-care service:</strong> The Clara Path does not provide medical diagnosis, clinical treatment decisions or regulated personal care. Funding, care, benefit and statutory decisions remain with the relevant authority or qualified professional.</div>
             </aside>
           </div>
@@ -53,15 +54,44 @@ export default async function Home() {
           </div>
         </section>
 
+        <section className="expertise-section" id="expertise">
+          <div className="container">
+            <div className="section-intro">
+              <div><p className="eyebrow">Our expertise</p><h2>Complex guidance translated into practical next steps.</h2></div>
+              <p>Health and social-care law and guidance differ between England and Wales. We separate those routes clearly and point you to the relevant official framework.</p>
+            </div>
+            <div className="steps">
+              <article className="step expertise-card">
+                <span className="step-number">01</span>
+                <h3>Adult social care</h3>
+                <p>We explain relevant pathways under the Care Act 2014 in England and the Social Services and Well-being (Wales) Act 2014 in Wales.</p>
+              </article>
+              <article className="step expertise-card">
+                <span className="step-number">02</span>
+                <h3>NHS Continuing Healthcare</h3>
+                <p>We help people understand preparation and navigation routes using the appropriate NHS England or NHS Wales framework.</p>
+              </article>
+              <article className="step expertise-card">
+                <span className="step-number">03</span>
+                <h3>Plain-language preparation</h3>
+                <p>We turn complex public guidance into organised questions, evidence prompts and practical actions for the next conversation.</p>
+              </article>
+            </div>
+            <div className="notice expertise-boundary">
+              <strong>Verified claims only:</strong> Individual team biographies, case-management experience and professional credentials will be added after supporting evidence has been reviewed.
+            </div>
+          </div>
+        </section>
+
         <section className="quick-start-section" id="how-we-help">
           <div className="container">
             <div className="section-intro">
               <div><p className="eyebrow">How we help</p><h2>Choose the level of support you need.</h2></div>
-              <p>Start with free information, join Carer’s Circle for ongoing tools and community support, or use a paid navigation and advocacy service when your situation needs more hands-on help.</p>
+              <p>Start with free information, explore Carer’s Circle for ongoing tools and community support, or use a paid navigation and advocacy service when your situation needs more hands-on help.</p>
             </div>
             <div className="steps">
               <article className="step"><span className="step-number">01</span><h3>Free guidance</h3><p>Use public Local Authority, care-term and assessment-preparation resources before approaching councils, NHS teams or other official services.</p></article>
-              <article className="step"><span className="step-number">02</span><h3>Carer’s Circle — £15/month</h3><p>Protected fillable downloads, private community discussions, official-source shortcuts, practical prompts and an expanding member library.</p></article>
+              <article className="step"><span className="step-number">02</span><h3>Carer’s Circle membership</h3><p>Protected fillable downloads, private community discussions, official-source shortcuts, practical prompts and an expanding member library. Final pricing and trial terms are awaiting approval.</p></article>
               <article className="step"><span className="step-number">03</span><h3>Paid navigation & advocacy</h3><p>Structured roadmaps, CHC preparation, appeals support, meeting advocacy and non-regulated care coordination for families needing individual help.</p><a href="/services">View paid services</a></article>
             </div>
           </div>
@@ -99,7 +129,7 @@ export default async function Home() {
             </div>
 
             <div className="notice" style={{ marginTop: "28px" }}>
-              <strong>Carer’s Circle membership: £15/month.</strong> Members receive the protected Resource Vault, private community, practical prompts, official-source library and expanding member tools.
+              <strong>Carer’s Circle membership terms are being finalised.</strong> The proposed seven-day trial, final price, billing date, cancellation process and refund terms will be published together after approval.
               {' '}<a href="https://members.theclarapath.org/members/resources" style={{ fontWeight: 800, color: "var(--blue)" }}>Explore the Member Resource Vault →</a>
             </div>
           </div>
@@ -113,9 +143,11 @@ export default async function Home() {
             </div>
             <div className="resource-grid">
               <article className="resource-card"><p className="eyebrow">GOV.UK</p><h3>Find your local council</h3><p>Use your postcode to confirm the council responsible for your address.</p><a href="https://www.gov.uk/find-local-council" target="_blank" rel="noreferrer">Open GOV.UK</a></article>
-              <article className="resource-card"><p className="eyebrow">NHS</p><h3>NHS Continuing Healthcare</h3><p>Read the NHS overview of eligibility, assessment and review routes.</p><a href="https://www.nhs.uk/conditions/social-care-and-support-guide/money-work-and-benefits/nhs-continuing-healthcare/" target="_blank" rel="noreferrer">Read NHS guidance</a></article>
+              <article className="resource-card"><p className="eyebrow">NHS England</p><h3>NHS Continuing Healthcare</h3><p>Read the NHS England overview of eligibility, assessment and review routes.</p><a href="https://www.nhs.uk/social-care-and-support/money-work-and-benefits/nhs-continuing-healthcare/" target="_blank" rel="noreferrer">Read NHS guidance</a></article>
               <article className="resource-card"><p className="eyebrow">GOV.UK</p><h3>Challenge a benefit decision</h3><p>Check the official mandatory reconsideration process and current deadlines.</p><a href="https://www.gov.uk/mandatory-reconsideration" target="_blank" rel="noreferrer">Read GOV.UK guidance</a></article>
-              <article className="resource-card"><p className="eyebrow">Legislation</p><h3>Care Act 2014</h3><p>Read the legislation covering adult care and support, including support for carers.</p><a href="https://www.legislation.gov.uk/ukpga/2014/23/contents" target="_blank" rel="noreferrer">Read the Care Act</a></article>
+              <article className="resource-card"><p className="eyebrow">England</p><h3>Care Act 2014</h3><p>Read the principal legislation for adult care and support in England, including support for carers.</p><a href="https://www.legislation.gov.uk/ukpga/2014/23/contents" target="_blank" rel="noreferrer">Read the Care Act</a></article>
+              <article className="resource-card"><p className="eyebrow">Wales</p><h3>Social Services and Well-being</h3><p>Read the Welsh Government overview and codes supporting social-services practice in Wales.</p><a href="https://www.gov.wales/social-services-codes-practice" target="_blank" rel="noreferrer">Read Welsh guidance</a></article>
+              <article className="resource-card"><p className="eyebrow">NHS Wales</p><h3>Continuing NHS Healthcare</h3><p>Read the national Welsh framework for eligibility, assessment and review routes.</p><a href="https://www.gov.wales/national-framework-continuing-nhs-healthcare" target="_blank" rel="noreferrer">Read the Welsh framework</a></article>
             </div>
           </div>
         </section>
@@ -138,9 +170,23 @@ export default async function Home() {
             <h2>From preparation to hands-on navigation.</h2>
             <p>Use Carer’s Circle for ongoing tools and community support, or explore paid services for structured roadmaps, CHC preparation, appeals support and care-system advocacy.</p>
             <div className="hero-actions" style={{ justifyContent: "center" }}>
-              <a className="button button-primary" href="https://members.theclarapath.org">Carer’s Circle — £15/month</a>
+              <a className="button button-primary" href="#enquiry">Get Help Now</a>
               <a className="button button-secondary" href="/services">View paid services</a>
             </div>
+          </div>
+        </section>
+
+        <section className="enquiry-section" id="enquiry">
+          <div className="container enquiry-layout">
+            <div className="enquiry-intro">
+              <p className="eyebrow">Get help navigating the next step</p>
+              <h2>Tell us what you need help understanding.</h2>
+              <p>Use this short enquiry to explain the route, assessment or decision you are trying to navigate. A detailed case history is not needed at this stage.</p>
+              <div className="notice safeguarding-notice">
+                <strong>This is not an emergency or safeguarding reporting service.</strong> If someone is in immediate danger, call 999. For urgent medical help that is not life-threatening, use NHS 111. Safeguarding concerns should be reported to the relevant local authority or emergency service.
+              </div>
+            </div>
+            <EnquiryForm />
           </div>
         </section>
       </main>

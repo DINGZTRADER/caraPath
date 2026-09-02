@@ -10,9 +10,10 @@ const BrandMark = () => (
 
 const links = [
   ["For Carers", "/#carers"],
+  ["Our Expertise", "/#expertise"],
   ["Resources", "/#resources"],
   ["Insights", "/insights"],
-  ["Paid Services", "/services"]
+  ["Get Help", "/#enquiry"]
 ] as const;
 
 export function PublicHeader() {
